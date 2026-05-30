@@ -100,7 +100,7 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
         <span class="kblock-title">Perakende Satışları</span>
         <span class="kblock-dot" style="background:#4e9af1"></span>
       </div>
-      <div class="kgrid" style="grid-template-columns:1fr 1fr 1fr" id="per-cards"></div>
+      <div class="kgrid" style="grid-template-columns:1fr 1fr 1fr 1fr" id="per-cards"></div>
     </div>
     <div class="kblock">
       <div class="kblock-header">
@@ -231,8 +231,9 @@ function render(){
   // PERAKENDE
   document.getElementById('per-cards').innerHTML = [
     {lbl:'Ciro', val:fmtTL(p.ciro), b:gyBadge(p.ciro,p.gy_ciro), sub: p.gy_ciro?`GY: ${fmtTL(p.gy_ciro)}`:''},
-    {lbl:'LfL Adet', val:p.lfl_adet!=null?fmtPct(p.lfl_adet):'—', b:'', sub:`GM: %${p.gm??'—'}`},
+    {lbl:'LfL Adet', val:p.lfl_adet!=null?fmtPct(p.lfl_adet):'—', b:'', sub:''},
     {lbl:'LfL Ciro',  val:p.lfl_ciro!=null?fmtPct(p.lfl_ciro):'—', b:'', sub:''},
+    {lbl:'GM%', val:p.gm!=null?`%${p.gm.toFixed(1)}`:'—', b:'', sub:''},
   ].map(c=>`<div class="kcard">
     <div class="kcard-lbl">${c.lbl}</div>
     <div class="kcard-val">${c.val}</div>

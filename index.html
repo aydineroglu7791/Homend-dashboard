@@ -153,8 +153,12 @@ let selYear = 2026;
 let selWeek = 22;
 
 // ---- HELPERS ----
-const M = (v, dec=2) => v == null ? null : (v/1000000).toFixed(dec);
-const fmtTL = v => v == null ? '—' : `₺${M(v)}M`;
+const fmtTL = v => {
+  if(v == null) return '—';
+  const abs = Math.abs(v);
+  if(abs >= 1000000) return (v<0?'-':'') + '₺' + (abs/1000000).toFixed(2) + 'M';
+  return (v<0?'-':'') + '₺' + Math.round(abs).toLocaleString('tr-TR');
+};
 const fmtPct = v => v == null ? '—' : (v>=0?'+':'')+v.toFixed(1)+'%';
 const badge = (v, isRatio=false) => {
   if(v==null) return '';

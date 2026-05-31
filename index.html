@@ -20,13 +20,23 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 .brand-title{font-size:15px;font-weight:500;color:var(--txt)}
 .brand-sub{font-size:11px;color:var(--txt2);margin-top:2px}
 /* FILTERS */
-.fgroups{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-.fgroup{display:flex;align-items:center;gap:4px}
-.fgroup-label{font-size:10px;color:var(--txt3);width:32px;text-align:right;flex-shrink:0}
-.pills{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;max-width:700px}
-.pill{background:var(--bg3);border:0.5px solid var(--border);border-radius:20px;color:var(--txt2);font-size:11px;padding:4px 11px;cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none}
+.fgroups{display:flex;align-items:center;gap:12px}
+.fgroup{display:flex;align-items:center;gap:6px;position:relative}
+.fgroup-label{font-size:10px;color:var(--txt3);flex-shrink:0}
+.pills{display:flex;gap:4px;flex-wrap:wrap}
+.pill{background:var(--bg3);border:0.5px solid var(--border);border-radius:20px;color:var(--txt2);font-size:11px;padding:4px 11px;cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none;flex-shrink:0}
 .pill:hover{border-color:rgba(78,154,241,.5);color:var(--txt)}
 .pill.active{background:rgba(78,154,241,.18);border-color:var(--acc);color:var(--acc);font-weight:500}
+.dd-btn{background:var(--bg3);border:0.5px solid var(--border);border-radius:20px;color:var(--txt);font-size:12px;padding:5px 14px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;user-select:none;transition:all .15s}
+.dd-btn:hover{border-color:rgba(78,154,241,.5)}
+.dd-btn.open{border-color:var(--acc);color:var(--acc)}
+.dd-arrow{font-size:9px;color:var(--txt3);transition:transform .2s}
+.dd-btn.open .dd-arrow{transform:rotate(180deg)}
+.dd-menu{position:absolute;top:calc(100% + 6px);right:0;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--r);padding:6px;display:none;z-index:999;min-width:80px;max-height:320px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.4);scrollbar-width:thin;scrollbar-color:var(--bg4) transparent}
+.dd-menu.open{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px}
+.dd-item{background:transparent;border:none;border-radius:6px;color:var(--txt2);font-size:11px;padding:5px 8px;cursor:pointer;text-align:center;transition:all .1s;white-space:nowrap}
+.dd-item:hover{background:var(--bg4);color:var(--txt)}
+.dd-item.active{background:rgba(78,154,241,.18);color:var(--acc);font-weight:500}
 /* TOPLAM */
 .toplam-block{background:linear-gradient(135deg,#1a2e50,#0f1b2d);border:1px solid rgba(155,127,232,.35);border-radius:var(--r2);padding:16px 20px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .toplam-left{}
@@ -77,17 +87,26 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
         <div class="brand-sub">Homend · Genel Müdür Sunumu</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:12px">
-      <div style="display:flex;align-items:center;gap:6px;background:var(--bg3);border:0.5px solid var(--border);border-radius:20px;padding:4px 12px">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="fgroups">
+        <div class="fgroup"><span class="fgroup-label">Yıl</span><div class="pills" id="fy"></div></div>
+        <div class="fgroup">
+          <span class="fgroup-label">Hafta</span>
+          <div style="position:relative">
+            <button class="dd-btn" id="hw-btn" onclick="toggleDd()">
+              <span id="hw-label">22</span>
+              <span class="dd-arrow">▼</span>
+            </button>
+            <div class="dd-menu" id="hw-menu"></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;background:var(--bg3);border:0.5px solid var(--border);border-radius:20px;padding:4px 12px;flex-shrink:0">
         <span style="font-size:11px;color:var(--acc);font-weight:500">v03</span>
         <span style="font-size:10px;color:var(--txt3)">•</span>
         <span style="font-size:11px;color:var(--txt2)" id="ver-date"></span>
       </div>
-    <div class="fgroups">
-      <div class="fgroup"><span class="fgroup-label">Yıl</span><div class="pills" id="fy"></div></div>
-      <div class="fgroup"><span class="fgroup-label">Hafta</span><div class="pills" id="fw"></div></div>
     </div>
-  </div>
   </div>
 
   <!-- TOPLAM CİRO -->
@@ -183,6 +202,36 @@ const gyBadge = (cur, gy) => {
 };
 
 // ---- BUILD PILLS ----
+function toggleDd(){
+  const btn = document.getElementById('hw-btn');
+  const menu = document.getElementById('hw-menu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+document.addEventListener('click', e=>{
+  if(!e.target.closest('#hw-btn') && !e.target.closest('#hw-menu')){
+    document.getElementById('hw-btn').classList.remove('open');
+    document.getElementById('hw-menu').classList.remove('open');
+  }
+});
+function buildWeekDd(weeks, sel){
+  const menu = document.getElementById('hw-menu');
+  const btn = document.getElementById('hw-label');
+  menu.innerHTML='';
+  btn.textContent=sel;
+  weeks.forEach(v=>{
+    const b = document.createElement('button');
+    b.className='dd-item'+(v===sel?' active':'');
+    b.textContent=v;
+    b.onclick=()=>{
+      selWeek=v;
+      document.getElementById('hw-btn').classList.remove('open');
+      document.getElementById('hw-menu').classList.remove('open');
+      render();
+    };
+    menu.appendChild(b);
+  });
+}
 function makePills(id, items, sel, cb){
   const el = document.getElementById(id);
   el.innerHTML='';
@@ -207,9 +256,9 @@ function render(){
     selWeek = wks[wks.length-1];
     render();
   });
-  // Week pills
+  // Week dropdown
   const wks = Object.values(RAW).filter(x=>x.yil===selYear).map(x=>x.hafta).sort((a,b)=>a-b);
-  makePills('fw',wks,selWeek,v=>selWeek=v);
+  buildWeekDd(wks, selWeek);
 
   if(!d){
     document.getElementById('t-val').textContent='Veri yok';
@@ -292,14 +341,12 @@ function render(){
 
   // BAR CHART
   const channels = [
-    {lbl:'Perakende', val:p.ciro, color:'#4e9af1'},
-    {lbl:'Karaca',    val:gi.krc_ciro, color:'#34c9a0'},
-    {lbl:'Jumbo',     val:gi.jmbo_ciro, color:'#34c9a0'},
-    {lbl:'Homend',    val:gi.hedt_ciro, color:'#34c9a0'},
-    {lbl:'E-Ticaret', val:(e.web||0)+(e.marketplace||0), color:'#e05a5a'},
+    {lbl:'Perakende', val:p.ciro||0, color:'#4e9af1'},
+    {lbl:'Grup İçi',  val:(gi.krc_ciro||0)+(gi.jmbo_ciro||0)+(gi.hedt_ciro||0), color:'#34c9a0'},
     {lbl:'Kurumsal',  val:(k.market||0)+(k.grup_ici||0)+(k.online_retail||0)+(k.yurt_disi||0), color:'#f5a623'},
-    {lbl:'Toptan',    val:t.ciro, color:'#9b7fe8'},
-  ].filter(c=>c.val!=null&&c.val>0);
+    {lbl:'E-Ticaret', val:(e.web||0)+(e.marketplace||0), color:'#e05a5a'},
+    {lbl:'Toptan',    val:t.ciro||0, color:'#9b7fe8'},
+  ];
   const maxV = Math.max(...channels.map(c=>c.val));
   document.getElementById('bars').innerHTML = channels.map(c=>`
     <div class="mini-bar-row">

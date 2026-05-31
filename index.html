@@ -75,7 +75,26 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 .mbf{height:100%;border-radius:4px;transition:width .4s ease}
 .mbv{font-size:13px;font-weight:500;color:var(--txt);width:80px;text-align:right;flex-shrink:0}
 .no-data{color:var(--txt3);font-size:12px;font-style:italic;text-align:center;padding:12px}
-@media(max-width:700px){.grid2,.grid3,.bottom-grid{grid-template-columns:1fr}div[style*='grid-template-columns:2fr']{grid-template-columns:1fr!important}.pills{max-width:100%}.kcard{padding:10px 12px!important}.kblock{padding:14px 16px!important}.kcard-val{font-size:16px!important}.kcard-lbl{font-size:10px!important}.toplam-block{padding:16px 20px!important}}
+@media(max-width:768px){
+  body{padding:12px}
+  .grid2,.grid3,.bottom-grid{grid-template-columns:1fr!important}
+  div[style*='grid-template-columns:2fr']{grid-template-columns:1fr!important}
+  div[style*='grid-template-columns:1fr 1fr 1fr 1fr']{grid-template-columns:1fr 1fr!important}
+  div[style*='grid-template-columns:1fr 1fr 1fr']{grid-template-columns:1fr 1fr!important}
+  div[style*='grid-template-columns:1fr 1fr 1fr 1fr 1fr']{grid-template-columns:1fr 1fr!important}
+  div[style*='grid-template-columns:1fr 1fr']{grid-template-columns:1fr 1fr!important}
+  .pills{max-width:100%;flex-wrap:wrap}
+  .fgroups{flex-direction:row;flex-wrap:wrap;gap:8px}
+  .kcard{padding:12px!important}
+  .kblock{padding:14px 16px!important}
+  .kcard-val{font-size:17px!important}
+  .kcard-lbl{font-size:11px!important}
+  .toplam-block{padding:16px!important}
+  .toplam-val{font-size:28px!important}
+  .brand-title{font-size:14px!important}
+  .mbl{width:70px!important;font-size:12px!important}
+  .mbv{font-size:12px!important;width:60px!important}
+}
 </style>
 </head>
 <body>
@@ -334,6 +353,7 @@ function render(){
     <div class="kcard-lbl">${c.lbl}</div>
     <div class="kcard-val">${fmtTL(c.val)}</div>
   </div>`).join('');
+
 
   // TOPTAN
   document.getElementById('top-cards').innerHTML = `<div class="kcard" style="display:flex;align-items:center;justify-content:space-between">

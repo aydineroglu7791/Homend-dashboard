@@ -16,7 +16,7 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 .dash{max-width:1600px;margin:0 auto}
 @media(min-width:900px){.dash{padding:0 20px}body{padding:20px 20px}}
 .topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px}
-.brand{display:flex;gap:10px;align-items:flex-start;position:absolute;left:50%;transform:translateX(-50%);text-align:center}
+.brand{display:flex;gap:10px;align-items:flex-start}
 .brand-dot{width:10px;height:10px;border-radius:50%;background:var(--acc);flex-shrink:0;margin-top:3px}
 .brand-title{font-size:15px;font-weight:500;color:var(--txt)}
 .brand-sub{font-size:11px;color:var(--txt2);margin-top:2px}
@@ -81,7 +81,7 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 <body>
 <div class="dash">
   <!-- TOPBAR ROW 1: başlık sol, versiyon sağ -->
-  <div style="position:relative;display:flex;align-items:center;justify-content:flex-end;margin-bottom:10px;min-height:40px">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
     <div class="brand">
       <div class="brand-dot"></div>
       <div>

@@ -75,22 +75,21 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 .mbf{height:100%;border-radius:4px;transition:width .4s ease}
 .mbv{font-size:13px;font-weight:500;color:var(--txt);width:80px;text-align:right;flex-shrink:0}
 .no-data{color:var(--txt3);font-size:12px;font-style:italic;text-align:center;padding:12px}
-@media(max-width:700px){.grid2,.grid3,.bottom-grid{grid-template-columns:1fr}.pills{max-width:100%}.kcard{padding:10px 12px!important}.kblock{padding:14px 16px!important}.kcard-val{font-size:16px!important}.kcard-lbl{font-size:10px!important}.toplam-block{padding:16px 20px!important}}
+@media(max-width:700px){.grid2,.grid3,.bottom-grid{grid-template-columns:1fr}div[style*='grid-template-columns:2fr']{grid-template-columns:1fr!important}.pills{max-width:100%}.kcard{padding:10px 12px!important}.kblock{padding:14px 16px!important}.kcard-val{font-size:16px!important}.kcard-lbl{font-size:10px!important}.toplam-block{padding:16px 20px!important}}
 </style>
 </head>
 <body>
 <div class="dash">
   <!-- TOPBAR ROW 1: başlık sol, versiyon sağ -->
   <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
-    <div class="brand">
+    <div class="brand" style="flex:1;justify-content:center">
       <div class="brand-dot"></div>
       <div>
-        <div class="brand-title">Satış Performans Özeti</div>
-        <div class="brand-sub">Homend · Genel Müdür Sunumu</div>
+        <div class="brand-title" style="text-align:center;width:100%">Homend Haftalık Satış Performans Özeti</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:4px;background:var(--bg3);border:0.5px solid var(--border);border-radius:20px;padding:3px 10px;flex-shrink:0">
-      <span style="font-size:10px;color:var(--acc);font-weight:500">v3-3</span>
+      <span style="font-size:10px;color:var(--acc);font-weight:500">v3-7</span>
       <span style="font-size:9px;color:var(--txt3)">•</span>
       <span style="font-size:10px;color:var(--txt2)" id="ver-date"></span>
     </div>
@@ -129,7 +128,7 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
         <span class="kblock-title">Perakende Satışları</span>
         <span class="kblock-dot" style="background:#4e9af1"></span>
       </div>
-      <div class="kgrid" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr" id="per-cards"></div>
+      <div class="kgrid" style="grid-template-columns:1fr 1fr 1fr 1fr" id="per-cards"></div>
     </div>
     <div class="kblock">
       <div class="kblock-header">
@@ -141,7 +140,7 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
   </div>
 
   <!-- KURUMSAL + E-TİCARET -->
-  <div class="grid3">
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px">
     <div class="kblock">
       <div class="kblock-header">
         <span class="kblock-title">Kurumsal Satışlar</span>
@@ -154,7 +153,7 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
         <span class="kblock-title">E-Ticaret</span>
         <span class="kblock-dot" style="background:#e05a5a"></span>
       </div>
-      <div class="kgrid" id="et-cards"></div>
+      <div class="kgrid" style="grid-template-columns:1fr 1fr" id="et-cards"></div>
     </div>
   </div>
 
@@ -298,8 +297,7 @@ function render(){
     {lbl:'Ciro', val:fmtTL(p.ciro), b:'', sub: p.gy_ciro?`GY: ${fmtTL(p.gy_ciro)}`:'', color:''},
     {lbl:'LfL Adet', val:p.lfl_adet!=null?fmtPct(p.lfl_adet):'—', b:'', sub:'', color: p.lfl_adet!=null?(p.lfl_adet>=0?'#34c9a0':'#e05a5a'):''},
     {lbl:'LfL Ciro',  val:p.lfl_ciro!=null?fmtPct(p.lfl_ciro):'—', b:'', sub:'', color: p.lfl_ciro!=null?(p.lfl_ciro>=0?'#34c9a0':'#e05a5a'):''},
-    {lbl:'GM%', val:p.gm!=null?`%${p.gm.toFixed(1)}`:'—', b:'', sub:'', color:''},
-    {lbl:'Hedef Ciro', val:fmtTL(p.hedef), b:'', sub: p.hedef&&p.ciro ? `%${((p.ciro/p.hedef)*100).toFixed(1)}` : '', color:'', subColor: p.hedef&&p.ciro ? (p.ciro>=p.hedef?'#34c9a0':'#e05a5a') : ''},
+    {lbl:'GM%', val:p.gm!=null?`%${p.gm.toFixed(1)}`:'—', b:'', sub:'', color:''}
   ].map(c=>`<div class="kcard">
     <div class="kcard-lbl">${c.lbl}</div>
     <div class="kcard-val" style="${c.color?'color:'+c.color:''}">${c.val}</div>

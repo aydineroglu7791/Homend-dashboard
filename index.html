@@ -65,7 +65,7 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 .pos{background:rgba(52,201,160,.15);color:#34c9a0}
 .neg{background:rgba(224,90,90,.15);color:#e05a5a}
 .neu{background:rgba(78,154,241,.15);color:#4e9af1}
-.gy-badge{font-size:10px;color:var(--txt3)}
+.gy-badge{font-size:10px;color:#7da8c8}
 /* bar chart */
 .chart-title{font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;color:var(--txt2);margin-bottom:12px}
 .mini-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
@@ -289,14 +289,14 @@ function render(){
 
   // PERAKENDE
   document.getElementById('per-cards').innerHTML = [
-    {lbl:'Ciro', val:fmtTL(p.ciro), b:gyBadge(p.ciro,p.gy_ciro), sub: p.gy_ciro?`GY: ${fmtTL(p.gy_ciro)}`:''},
-    {lbl:'LfL Adet', val:p.lfl_adet!=null?fmtPct(p.lfl_adet):'—', b:'', sub:''},
-    {lbl:'LfL Ciro',  val:p.lfl_ciro!=null?fmtPct(p.lfl_ciro):'—', b:'', sub:''},
-    {lbl:'GM%', val:p.gm!=null?`%${p.gm.toFixed(1)}`:'—', b:'', sub:''},
+    {lbl:'Ciro', val:fmtTL(p.ciro), b:'', sub: p.gy_ciro?`GY: ${fmtTL(p.gy_ciro)}`:'', color:''},
+    {lbl:'LfL Adet', val:p.lfl_adet!=null?fmtPct(p.lfl_adet):'—', b:'', sub:'', color: p.lfl_adet!=null?(p.lfl_adet>=0?'#34c9a0':'#e05a5a'):''},
+    {lbl:'LfL Ciro',  val:p.lfl_ciro!=null?fmtPct(p.lfl_ciro):'—', b:'', sub:'', color: p.lfl_ciro!=null?(p.lfl_ciro>=0?'#34c9a0':'#e05a5a'):''},
+    {lbl:'GM%', val:p.gm!=null?`%${p.gm.toFixed(1)}`:'—', b:'', sub:'', color:''},
   ].map(c=>`<div class="kcard">
     <div class="kcard-lbl">${c.lbl}</div>
-    <div class="kcard-val">${c.val}</div>
-    <div class="kcard-row">${c.b}${c.sub?`<span class="gy-badge">${c.sub}</span>`:''}</div>
+    <div class="kcard-val" style="${c.color?'color:'+c.color:''}">${c.val}</div>
+    <div class="kcard-row">${c.b}${c.sub?`<span class="gy-badge" style="font-size:11px">${c.sub}</span>`:''}</div>
   </div>`).join('');
 
   // GRUP İÇİ

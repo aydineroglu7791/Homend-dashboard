@@ -291,11 +291,11 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
           <tr>
             <th style="width:50px">Resim</th>
             <th>Ürün Adı</th>
-            <th class="num">Perakende</th>
-            <th class="num">E-Ticaret</th>
-            <th class="num">Kurumsal</th>
-            <th class="num">Toptan</th>
-            <th class="num">Toplam</th>
+            <th class="num toplam-col">Toplam</th>
+            <th class="num detail-col">Perakende</th>
+            <th class="num detail-col">E-Ticaret</th>
+            <th class="num detail-col">Kurumsal</th>
+            <th class="num detail-col">Toptan</th>
           </tr>
         </thead>
         <tbody id="urun-tbody"></tbody>
@@ -548,20 +548,20 @@ function renderUrun(){
         ${p.img ? `<img src="${p.img}" style="width:40px;height:40px;object-fit:contain;border-radius:4px;background:var(--bg4);cursor:pointer" loading="lazy" onclick="openLightbox('${p.img}')" onerror="this.style.display='none'">` : '<div style="width:40px;height:40px;background:var(--bg4);border-radius:4px"></div>'}
       </td>
       <td>${p.u}</td>
-      <td class="num">${p.per||'—'}</td>
-      <td class="num">${p.et||'—'}</td>
-      <td class="num">${p.kur||'—'}</td>
-      <td class="num">${p.top||'—'}</td>
-      <td class="num" style="font-weight:500;color:var(--acc)">${p.t}</td>
+      <td class="num toplam-col" style="font-weight:500;color:var(--acc)">${p.t}</td>
+      <td class="num detail-col">${p.per||'—'}</td>
+      <td class="num detail-col">${p.et||'—'}</td>
+      <td class="num detail-col">${p.kur||'—'}</td>
+      <td class="num detail-col">${p.top||'—'}</td>
     </tr>`).join('') + `
     <tr class="urun-total-row">
       <td></td>
       <td>TOPLAM</td>
-      <td class="num">${totPer}</td>
-      <td class="num">${totEt}</td>
-      <td class="num">${totKur}</td>
-      <td class="num">${totTop}</td>
-      <td class="num">${totAll}</td>
+      <td class="num toplam-col">${totAll}</td>
+      <td class="num detail-col">${totPer}</td>
+      <td class="num detail-col">${totEt}</td>
+      <td class="num detail-col">${totKur}</td>
+      <td class="num detail-col">${totTop}</td>
     </tr>`;
 }
 

@@ -131,6 +131,13 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
   .block{padding:18px 20px}
 }
 
+/* LIGHTBOX */
+.lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center;cursor:pointer}
+.lightbox.open{display:flex}
+.lightbox img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px;box-shadow:0 0 40px rgba(0,0,0,.8)}
+.lightbox-close{position:fixed;top:20px;right:24px;color:#fff;font-size:28px;cursor:pointer;z-index:10000;opacity:.8}
+.lightbox-close:hover{opacity:1}
+
 /* ÜRÜN RAPORU */
 .urun-wrap{display:none}
 .urun-wrap.active{display:block}
@@ -278,8 +285,8 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
         <div class="dd-menu" id="grup-menu" style="grid-template-columns:1fr 1fr!important;min-width:280px"></div>
       </div>
     </div>
-    <div class="urun-table-wrap">
-      <table class="urun-table">
+    <div class="urun-table-wrap" style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+      <table class="urun-table" style="min-width:600px">
         <thead>
           <tr>
             <th style="width:50px">Resim</th>
@@ -296,6 +303,12 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
     </div>
   </div>
 
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close" onclick="closeLightbox()">✕</span>
+  <img id="lightbox-img" src="" alt="">
 </div>
 
 <script>
@@ -532,7 +545,7 @@ function renderUrun(){
   tbody.innerHTML = filtered.map(p=>`
     <tr>
       <td style="width:50px;padding:6px 8px">
-        ${p.img ? `<img src="${p.img}" style="width:40px;height:40px;object-fit:contain;border-radius:4px;background:var(--bg4)" loading="lazy" onerror="this.style.display='none'">` : '<div style="width:40px;height:40px;background:var(--bg4);border-radius:4px"></div>'}
+        ${p.img ? `<img src="${p.img}" style="width:40px;height:40px;object-fit:contain;border-radius:4px;background:var(--bg4);cursor:pointer" loading="lazy" onclick="openLightbox('${p.img}')" onerror="this.style.display='none'">` : '<div style="width:40px;height:40px;background:var(--bg4);border-radius:4px"></div>'}
       </td>
       <td>${p.u}</td>
       <td class="num">${p.per||'—'}</td>
@@ -577,6 +590,15 @@ function setMode(m){
     render();
   }
 }
+function openLightbox(url){
+  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightbox-img').src = '';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLightbox(); });
 </script>
-</body>
-</html>

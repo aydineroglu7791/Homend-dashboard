@@ -365,7 +365,7 @@ function buildDd(items, sel, labelFn, onSelect){
     const b = document.createElement('button');
     b.className = 'dd-item'+(v===sel?' active':'');
     b.textContent = labelFn(v);
-    b.onclick = ()=>{ onSelect(v); document.getElementById('hw-btn').classList.remove('open'); menu.classList.remove('open'); render(); };
+    b.onclick = ()=>{ onSelect(v); document.getElementById('hw-btn').classList.remove('open'); menu.classList.remove('open'); if(urunActive) renderUrun(); else render(); };
     menu.appendChild(b);
   });
 }
@@ -384,16 +384,45 @@ function makePills(id, items, sel, labelFn, cb){
 }
 
 // ---- MODE ----
+let urunActive = false;
+
 function setMode(m){
-  mode = m;
   document.getElementById('tab-hafta').classList.toggle('active', m==='hafta');
   document.getElementById('tab-ay').classList.toggle('active', m==='ay');
-  // Reset to last available period
-  const RAW = m==='hafta' ? HAFTALIK : AYLIK;
-  const periods = Object.values(RAW).filter(x=>x.yil===selYear).map(x=>m==='hafta'?x.hafta:x.ay).sort((a,b)=>a-b);
-  if(m==='hafta') selWeek = periods[periods.length-1]||22;
-  else selAy = periods[periods.length-1]||5;
-  render();
+  document.getElementById('tab-urun')?.classList.toggle('active', m==='urun');
+
+  const urunWrap = document.getElementById('urun-wrap');
+  const blocks = document.querySelectorAll('.grid-2,.bottom-grid,.toplam-block');
+
+  if(m==='urun'){
+    urunActive = true;
+    mode = 'hafta';
+    blocks.forEach(el=>el.style.display='none');
+    urunWrap.classList.add('active');
+    document.getElementById('period-label').textContent = 'Hafta';
+    // Rebuild week dropdown to call renderUrun on select
+    const wks = Object.values(HAFTALIK).filter(x=>x.yil===selYear).map(x=>x.hafta).sort((a,b)=>a-b);
+    buildDd(wks, selWeek, v=>String(v), v=>{ selWeek=v; renderUrun(); });
+    // Also rebuild year pills to update week dropdown and renderUrun
+    makePills('fy',[2024,2025,2026],selYear,v=>v,v=>{
+      selYear=v;
+      const w=Object.values(HAFTALIK).filter(x=>x.yil===v).map(x=>x.hafta).sort((a,b)=>a-b);
+      selWeek=w[w.length-1]||22;
+      buildDd(w,selWeek,v2=>String(v2),v2=>{selWeek=v2;renderUrun();});
+      renderUrun();
+    });
+    selGrup='Tümü'; initGrupPills(); renderUrun();
+  } else {
+    urunActive = false;
+    blocks.forEach(el=>el.style.display='');
+    urunWrap.classList.remove('active');
+    mode = m;
+    const RAW = m==='hafta' ? HAFTALIK : AYLIK;
+    const periods = Object.values(RAW).filter(x=>x.yil===selYear).map(x=>m==='hafta'?x.hafta:x.ay).sort((a,b)=>a-b);
+    if(m==='hafta') selWeek=periods[periods.length-1]||22;
+    else selAy=periods[periods.length-1]||5;
+    render();
+  }
 }
 
 // ---- RENDER ----

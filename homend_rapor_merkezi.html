@@ -140,7 +140,7 @@
 
   .tablecard{background:#fff;border:1.5px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;}
   .tablescroll{overflow:auto;max-height:calc(100vh - 200px);}
-  table{border-collapse:collapse;width:100%;font-size:14px;min-width:1150px;}
+  table{border-collapse:collapse;width:100%;font-size:15px;min-width:1150px;}
   thead th{
     position:sticky;top:0;background:var(--green-800);color:#fff;font-weight:700;font-size:12px;
     text-transform:uppercase;letter-spacing:.02em;padding:9px 6px;text-align:center;border-bottom:1px solid var(--green-900);z-index:3;
@@ -148,17 +148,19 @@
   td.lead{text-align:left;font-weight:600;}
   td.center, th.center{text-align:center;}
   thead tr.kpirow th{
-    position:sticky;top:33px;background:var(--green-100);color:var(--green-900);font-size:15px;font-weight:800;
+    position:sticky;top:33px;background:var(--green-100);color:var(--green-900);font-size:16px;font-weight:800;
     text-transform:none;letter-spacing:0;padding:8px 6px;border-bottom:2px solid var(--green-700);z-index:2;
   }
   thead tr.kpirow th.kpilabel{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;text-align:left;}
-  tbody td{padding:5px 6px;text-align:right;border-bottom:1px solid var(--green-100);white-space:nowrap;transition:font-size .1s;}
-  tbody tr:hover td{background:var(--green-50);font-size:1.16em;}
-  tr.totalrow:hover td{background:var(--green-800);}
+  tbody td{padding:5px 6px;text-align:right;border-bottom:1px solid var(--green-100);white-space:nowrap;}
+  tbody tr:hover td{background:var(--green-100);}
+  tbody tr:hover td.lead{box-shadow:inset 4px 0 0 var(--green-600);}
+  tr.totalrow:hover td, tr.yeartotal:hover td{background:var(--green-800);}
   tr.grandtotal:hover td{background:var(--green-900);}
-  tr.totalrow td{background:var(--green-800);color:#fff;font-weight:800;border-bottom:2px solid var(--green-900);}
-  tr.yeartotal td{background:var(--green-800);color:#fff;font-weight:800;font-size:14.5px;border-bottom:2px solid var(--green-900);}
-  tr.grandtotal td{background:var(--green-900);color:#fff;font-weight:800;font-size:15px;border-bottom:2px solid var(--green-900);}
+  tr.totalrow:hover td.lead, tr.yeartotal:hover td.lead, tr.grandtotal:hover td.lead{box-shadow:inset 4px 0 0 var(--green-300);}
+  tr.totalrow td{background:var(--green-800);color:#fff;font-weight:800;font-size:16px;border-bottom:2px solid var(--green-900);}
+  tr.yeartotal td{background:var(--green-800);color:#fff;font-weight:800;font-size:16px;border-bottom:2px solid var(--green-900);}
+  tr.grandtotal td{background:var(--green-900);color:#fff;font-weight:800;font-size:17px;border-bottom:2px solid var(--green-900);}
   .dash{color:#B9C9BE;}
   /* Eşik bazlı dolgu renklendirmesi (mat) - LFL Adet, LFL Ciro, GM%, OFA, OFT için - satır stillerinin önüne geçsin */
   td.fill-green{background:#BEE3C3 !important;color:#111 !important;}

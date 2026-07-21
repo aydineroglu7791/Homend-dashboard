@@ -152,8 +152,10 @@
     text-transform:none;letter-spacing:0;padding:8px 6px;border-bottom:2px solid var(--green-700);z-index:2;
   }
   thead tr.kpirow th.kpilabel{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;text-align:left;}
-  tbody td{padding:5px 6px;text-align:right;border-bottom:1px solid var(--green-100);white-space:nowrap;}
-  tbody tr:hover td{background:var(--green-50);}
+  tbody td{padding:5px 6px;text-align:right;border-bottom:1px solid var(--green-100);white-space:nowrap;transition:font-size .1s;}
+  tbody tr:hover td{background:var(--green-50);font-size:1.16em;}
+  tr.totalrow:hover td{background:var(--green-800);}
+  tr.grandtotal:hover td{background:var(--green-900);}
   tr.totalrow td{background:var(--green-800);color:#fff;font-weight:800;border-bottom:2px solid var(--green-900);}
   tr.yeartotal td{background:var(--green-800);color:#fff;font-weight:800;font-size:14.5px;border-bottom:2px solid var(--green-900);}
   tr.grandtotal td{background:var(--green-900);color:#fff;font-weight:800;font-size:15px;border-bottom:2px solid var(--green-900);}
@@ -613,12 +615,12 @@ function renderYil(){
   let html = '';
   if(activeYear==='all'){
     AY_YIL_DATA.yearTotals.forEach(y=>{
-      html += `<tr class="yeartotal"><td class="lead">${y.year}</td>${metricCells(y.vals)}</tr>`;
+      html += `<tr><td class="lead">${y.year}</td>${metricCells(y.vals)}</tr>`;
     });
     html += `<tr class="grandtotal"><td class="lead">Genel Toplam</td>${metricCellsPlain(AY_YIL_DATA.genelToplam)}</tr>`;
   } else {
     const yt = AY_YIL_DATA.yearTotals.find(y=>y.year===activeYear);
-    html += `<tr class="grandtotal"><td class="lead">${activeYear}</td>${metricCells(yt ? yt.vals : EMPTY9.slice())}</tr>`;
+    html += `<tr><td class="lead">${activeYear}</td>${metricCells(yt ? yt.vals : EMPTY9.slice())}</tr>`;
   }
   tbody.innerHTML = html;
   renderKpiRow(1, '', null);

@@ -143,10 +143,10 @@
   table{border-collapse:collapse;width:100%;font-size:14px;min-width:1150px;}
   thead th{
     position:sticky;top:0;background:var(--green-800);color:#fff;font-weight:700;font-size:12px;
-    text-transform:uppercase;letter-spacing:.02em;padding:9px 6px;text-align:right;border-bottom:1px solid var(--green-900);z-index:3;
+    text-transform:uppercase;letter-spacing:.02em;padding:9px 6px;text-align:center;border-bottom:1px solid var(--green-900);z-index:3;
   }
-  th.lead, td.lead{text-align:left;}
-  td.lead{font-weight:600;}
+  td.lead{text-align:left;font-weight:600;}
+  td.center, th.center{text-align:center;}
   thead tr.kpirow th{
     position:sticky;top:33px;background:var(--green-100);color:var(--green-900);font-size:15px;font-weight:800;
     text-transform:none;letter-spacing:0;padding:8px 6px;border-bottom:2px solid var(--green-700);z-index:2;
@@ -158,10 +158,10 @@
   tr.yeartotal td{background:var(--green-100);color:var(--green-900);font-weight:800;font-size:14.5px;border-top:1.5px solid var(--green-500);border-bottom:1.5px solid var(--green-500);}
   tr.grandtotal td{background:var(--green-700);color:#fff;font-weight:800;font-size:15px;}
   .dash{color:#B9C9BE;}
-  /* Eşik bazlı dolgu renklendirmesi (mat) - LFL Adet, LFL Ciro, GM%, OFA, OFT için */
-  td.fill-green{background:#BEE3C3;color:#111;}
-  td.fill-yellow{background:#F5E1A0;color:#111;}
-  td.fill-red{background:#F2C2C0;color:#111;}
+  /* Eşik bazlı dolgu renklendirmesi (mat) - LFL Adet, LFL Ciro, GM%, OFA, OFT için - satır stillerinin önüne geçsin */
+  td.fill-green{background:#BEE3C3 !important;color:#111 !important;}
+  td.fill-yellow{background:#F5E1A0 !important;color:#111 !important;}
+  td.fill-red{background:#F2C2C0 !important;color:#111 !important;}
 
   @media(max-width:520px){
     #page-home .topbar{padding:20px;}
@@ -426,41 +426,41 @@ function tierOFT(v){ return tierClass(v, 4000, 6000); }
 // Detay satırları - eşik renklendirmesi uygulanır
 function metricCells(vals){
   return `
-    <td class="${tierLflAdet(vals[0])}">${fmtPct(vals[0])}</td>
-    <td class="${tierLflCiro(vals[1])}">${fmtPct(vals[1])}</td>
+    <td class="${tierLflAdet(vals[0])} center">${fmtPct(vals[0])}</td>
+    <td class="${tierLflCiro(vals[1])} center">${fmtPct(vals[1])}</td>
     <td>${fmtTL(vals[2])}</td>
     <td>${fmtTL(vals[3])}</td>
-    <td class="${tierGM(vals[4])}">${fmtPct(vals[4])}</td>
-    <td>${fmtInt(vals[5])}</td>
-    <td>${fmtInt(vals[6])}</td>
-    <td class="${tierOFA(vals[7])}">${fmtRatio(vals[7])}</td>
+    <td class="${tierGM(vals[4])} center">${fmtPct(vals[4])}</td>
+    <td class="center">${fmtInt(vals[5])}</td>
+    <td class="center">${fmtInt(vals[6])}</td>
+    <td class="${tierOFA(vals[7])} center">${fmtRatio(vals[7])}</td>
     <td class="${tierOFT(vals[8])}">${fmtTL(vals[8])}</td>
   `;
 }
 // Toplam satırları - dolgu YOK, sadece düz değer (kendi koyu renk stiliyle)
 function metricCellsPlain(vals){
   return `
-    <td>${fmtPct(vals[0])}</td>
-    <td>${fmtPct(vals[1])}</td>
+    <td class="center">${fmtPct(vals[0])}</td>
+    <td class="center">${fmtPct(vals[1])}</td>
     <td>${fmtTL(vals[2])}</td>
     <td>${fmtTL(vals[3])}</td>
-    <td>${fmtPct(vals[4])}</td>
-    <td>${fmtInt(vals[5])}</td>
-    <td>${fmtInt(vals[6])}</td>
-    <td>${fmtRatio(vals[7])}</td>
+    <td class="center">${fmtPct(vals[4])}</td>
+    <td class="center">${fmtInt(vals[5])}</td>
+    <td class="center">${fmtInt(vals[6])}</td>
+    <td class="center">${fmtRatio(vals[7])}</td>
     <td>${fmtTL(vals[8])}</td>
   `;
 }
 function metricKpiCells(vals){
   return `
-    <th>${fmtPct(vals[0])}</th>
-    <th>${fmtPct(vals[1])}</th>
+    <th class="center">${fmtPct(vals[0])}</th>
+    <th class="center">${fmtPct(vals[1])}</th>
     <th>${fmtTL(vals[2])}</th>
     <th>${fmtTL(vals[3])}</th>
-    <th>${fmtPct(vals[4])}</th>
-    <th>${fmtInt(vals[5])}</th>
-    <th>${fmtInt(vals[6])}</th>
-    <th>${fmtRatio(vals[7])}</th>
+    <th class="center">${fmtPct(vals[4])}</th>
+    <th class="center">${fmtInt(vals[5])}</th>
+    <th class="center">${fmtInt(vals[6])}</th>
+    <th class="center">${fmtRatio(vals[7])}</th>
     <th>${fmtTL(vals[8])}</th>
   `;
 }
@@ -486,7 +486,7 @@ function combineTotals(list){
 }
 
 let activeTab = 'hafta';
-let activeYear = 2026;
+let activeYear = 'all';
 
 const yearSelect = document.getElementById('yearSelect');
 const ALL_YEARS = ['all',2024,2025,2026];
@@ -615,7 +615,7 @@ function renderYil(){
     AY_YIL_DATA.yearTotals.forEach(y=>{
       html += `<tr class="yeartotal"><td class="lead">${y.year}</td>${metricCells(y.vals)}</tr>`;
     });
-    html += `<tr class="grandtotal"><td class="lead">Genel Toplam</td>${metricCells(AY_YIL_DATA.genelToplam)}</tr>`;
+    html += `<tr class="grandtotal"><td class="lead">Genel Toplam</td>${metricCellsPlain(AY_YIL_DATA.genelToplam)}</tr>`;
   } else {
     const yt = AY_YIL_DATA.yearTotals.find(y=>y.year===activeYear);
     html += `<tr class="grandtotal"><td class="lead">${activeYear}</td>${metricCells(yt ? yt.vals : EMPTY9.slice())}</tr>`;

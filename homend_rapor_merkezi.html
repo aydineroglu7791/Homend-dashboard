@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -144,25 +145,23 @@
     position:sticky;top:0;background:var(--green-800);color:#fff;font-weight:700;font-size:12px;
     text-transform:uppercase;letter-spacing:.02em;padding:9px 6px;text-align:right;border-bottom:1px solid var(--green-900);z-index:3;
   }
-  thead th:first-child, thead th:nth-child(2), thead th:nth-child(3){text-align:left;}
+  th.lead, td.lead{text-align:left;}
+  td.lead{font-weight:600;}
   thead tr.kpirow th{
     position:sticky;top:33px;background:var(--green-100);color:var(--green-900);font-size:15px;font-weight:800;
     text-transform:none;letter-spacing:0;padding:8px 6px;border-bottom:2px solid var(--green-700);z-index:2;
   }
   thead tr.kpirow th.kpilabel{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;text-align:left;}
   tbody td{padding:5px 6px;text-align:right;border-bottom:1px solid var(--green-100);white-space:nowrap;}
-  tbody td:first-child, tbody td:nth-child(2), tbody td:nth-child(3){text-align:left;font-weight:600;}
   tbody tr:hover td{background:var(--green-50);}
   tr.totalrow td{background:var(--green-800);color:#fff;font-weight:800;border-bottom:2px solid var(--green-900);}
   tr.yeartotal td{background:var(--green-100);color:var(--green-900);font-weight:800;font-size:14.5px;border-top:1.5px solid var(--green-500);border-bottom:1.5px solid var(--green-500);}
   tr.grandtotal td{background:var(--green-700);color:#fff;font-weight:800;font-size:15px;}
-  .pos{color:var(--green-700);font-weight:700;}
-  .neg{color:var(--red);font-weight:700;}
   .dash{color:#B9C9BE;}
-  tr.totalrow .pos, tr.grandtotal .pos{color:var(--green-300);}
-  tr.totalrow .neg, tr.grandtotal .neg{color:#FF9E9E;}
-  tr.yeartotal .pos{color:var(--green-800);}
-  tr.yeartotal .neg{color:var(--red);}
+  /* Eşik bazlı dolgu renklendirmesi (mat) - LFL Adet, LFL Ciro, GM%, OFA, OFT için */
+  td.fill-green{background:#BEE3C3;color:#111;}
+  td.fill-yellow{background:#F5E1A0;color:#111;}
+  td.fill-red{background:#F2C2C0;color:#111;}
 
   @media(max-width:520px){
     #page-home .topbar{padding:20px;}
@@ -396,8 +395,7 @@ function ayAdiFromDate(dt){
 function fmtPct(v){
   if(v===null||v===undefined||isNaN(v)) return '<span class="dash">—</span>';
   const p = v*100;
-  const cls = p>0.0001 ? 'pos' : (p<-0.0001 ? 'neg':'');
-  return `<span class="${cls}">${p.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}%</span>`;
+  return `${p.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}%`;
 }
 function fmtTL(v, decimals=0){
   if(v===null||v===undefined||isNaN(v)) return '<span class="dash">—</span>';
@@ -411,7 +409,36 @@ function fmtRatio(v){
   if(v===null||v===undefined||isNaN(v)) return '<span class="dash">—</span>';
   return v.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
+
+// Eşik bazlı dolgu (tier) mantığı: value>=greenMin -> yeşil, value<redMax -> kırmızı, arası -> sarı
+function tierClass(value, redMax, greenMin){
+  if(value===null||value===undefined||isNaN(value)) return '';
+  if(value>=greenMin) return 'fill-green';
+  if(value<redMax) return 'fill-red';
+  return 'fill-yellow';
+}
+function tierLflAdet(v){ if(v===null||v===undefined) return ''; return tierClass(v*100, 10, 25); }
+function tierLflCiro(v){ if(v===null||v===undefined) return ''; return tierClass(v*100, 60, 100); }
+function tierGM(v){ if(v===null||v===undefined) return ''; return tierClass(v*100, 43, 46); }
+function tierOFA(v){ return tierClass(v, 1.30, 1.50); }
+function tierOFT(v){ return tierClass(v, 4000, 6000); }
+
+// Detay satırları - eşik renklendirmesi uygulanır
 function metricCells(vals){
+  return `
+    <td class="${tierLflAdet(vals[0])}">${fmtPct(vals[0])}</td>
+    <td class="${tierLflCiro(vals[1])}">${fmtPct(vals[1])}</td>
+    <td>${fmtTL(vals[2])}</td>
+    <td>${fmtTL(vals[3])}</td>
+    <td class="${tierGM(vals[4])}">${fmtPct(vals[4])}</td>
+    <td>${fmtInt(vals[5])}</td>
+    <td>${fmtInt(vals[6])}</td>
+    <td class="${tierOFA(vals[7])}">${fmtRatio(vals[7])}</td>
+    <td class="${tierOFT(vals[8])}">${fmtTL(vals[8])}</td>
+  `;
+}
+// Toplam satırları - dolgu YOK, sadece düz değer (kendi koyu renk stiliyle)
+function metricCellsPlain(vals){
   return `
     <td>${fmtPct(vals[0])}</td>
     <td>${fmtPct(vals[1])}</td>
@@ -498,8 +525,8 @@ function selectTabByName(name){
 }
 document.querySelector('#page-perakende-ozet .tab[data-tab="hafta"]').classList.add('active');
 
-function renderHead(cols){
-  document.getElementById('theadRow').innerHTML = cols.map(c=>`<th>${c}</th>`).join('');
+function renderHead(cols, leadCount){
+  document.getElementById('theadRow').innerHTML = cols.map((c,i)=>`<th class="${i<leadCount?'lead':''}">${c}</th>`).join('');
 }
 function renderKpiRow(leadColspan, leadLabel, vals){
   const row = document.getElementById('kpiRow');
@@ -515,7 +542,7 @@ function renderPerakendeOzet(){
 }
 
 function renderHafta(){
-  renderHead(['Ay','Hafta','Tarih', ...METRIC_HEADS]);
+  renderHead(['Ay','Hafta','Tarih', ...METRIC_HEADS], 3);
   let weeks;
   if(activeYear==='all'){
     weeks = HAFTA_DATA.slice();
@@ -533,9 +560,9 @@ function renderHafta(){
     daysDesc.forEach(d=>{
       const dt = parseTRDate(d[0]);
       const vals = d.slice(1);
-      html += `<tr><td>${ayAdiFromDate(dt)}</td><td>${w.weekNum} ${w.year}</td><td>${d[0]}</td>${metricCells(vals)}</tr>`;
+      html += `<tr><td class="lead">${ayAdiFromDate(dt)}</td><td class="lead">${w.weekNum} ${w.year}</td><td class="lead">${d[0]}</td>${metricCells(vals)}</tr>`;
     });
-    html += `<tr class="totalrow"><td colspan="3">Hafta ${w.weekNum} ${w.year} Toplamı</td>${metricCells(w.total)}</tr>`;
+    html += `<tr class="totalrow"><td class="lead" colspan="3">Hafta ${w.weekNum} ${w.year} Toplamı</td>${metricCellsPlain(w.total)}</tr>`;
   });
   tbody.innerHTML = html;
 
@@ -552,44 +579,44 @@ function renderHafta(){
 }
 
 function renderAy(){
-  renderHead(['Yıl','Ay Adı', ...METRIC_HEADS]);
+  renderHead(['Yıl','Ay Adı', ...METRIC_HEADS], 2);
   const tbody = document.getElementById('tbody');
   let html = '';
 
   if(activeYear==='all'){
-    [2024,2025,2026].forEach(yr=>{
+    [2026,2025,2024].forEach(yr=>{
       AY_YIL_DATA.months.filter(m=>m.year===yr).forEach(m=>{
-        html += `<tr><td>${m.year}</td><td>${m.ayAdi}</td>${metricCells(m.vals)}</tr>`;
+        html += `<tr><td class="lead">${m.year}</td><td class="lead">${m.ayAdi}</td>${metricCells(m.vals)}</tr>`;
       });
       const yt = AY_YIL_DATA.yearTotals.find(y=>y.year===yr);
-      if(yt) html += `<tr class="yeartotal"><td colspan="2">Toplam ${yr}</td>${metricCells(yt.vals)}</tr>`;
+      if(yt) html += `<tr class="yeartotal"><td class="lead" colspan="2">Toplam ${yr}</td>${metricCellsPlain(yt.vals)}</tr>`;
     });
-    html += `<tr class="grandtotal"><td colspan="2">Genel Toplam</td>${metricCells(AY_YIL_DATA.genelToplam)}</tr>`;
+    html += `<tr class="grandtotal"><td class="lead" colspan="2">Genel Toplam</td>${metricCellsPlain(AY_YIL_DATA.genelToplam)}</tr>`;
     tbody.innerHTML = html;
     renderKpiRow(2, 'Tümü', AY_YIL_DATA.genelToplam);
   } else {
     AY_YIL_DATA.months.filter(m=>m.year===activeYear).forEach(m=>{
-      html += `<tr><td>${m.year}</td><td>${m.ayAdi}</td>${metricCells(m.vals)}</tr>`;
+      html += `<tr><td class="lead">${m.year}</td><td class="lead">${m.ayAdi}</td>${metricCells(m.vals)}</tr>`;
     });
     const yt = AY_YIL_DATA.yearTotals.find(y=>y.year===activeYear);
-    if(yt) html += `<tr class="totalrow"><td colspan="2">Toplam ${yt.year}</td>${metricCells(yt.vals)}</tr>`;
+    if(yt) html += `<tr class="totalrow"><td class="lead" colspan="2">Toplam ${yt.year}</td>${metricCellsPlain(yt.vals)}</tr>`;
     tbody.innerHTML = html;
     renderKpiRow(2, activeYear + ' Toplamı', yt ? yt.vals : EMPTY9.slice());
   }
 }
 
 function renderYil(){
-  renderHead(['Yıl', ...METRIC_HEADS]);
+  renderHead(['Yıl', ...METRIC_HEADS], 1);
   const tbody = document.getElementById('tbody');
   let html = '';
   if(activeYear==='all'){
     AY_YIL_DATA.yearTotals.forEach(y=>{
-      html += `<tr class="yeartotal"><td>${y.year}</td>${metricCells(y.vals)}</tr>`;
+      html += `<tr class="yeartotal"><td class="lead">${y.year}</td>${metricCellsPlain(y.vals)}</tr>`;
     });
-    html += `<tr class="grandtotal"><td>Genel Toplam</td>${metricCells(AY_YIL_DATA.genelToplam)}</tr>`;
+    html += `<tr class="grandtotal"><td class="lead">Genel Toplam</td>${metricCellsPlain(AY_YIL_DATA.genelToplam)}</tr>`;
   } else {
     const yt = AY_YIL_DATA.yearTotals.find(y=>y.year===activeYear);
-    html += `<tr class="grandtotal"><td>${activeYear}</td>${metricCells(yt ? yt.vals : EMPTY9.slice())}</tr>`;
+    html += `<tr class="grandtotal"><td class="lead">${activeYear}</td>${metricCellsPlain(yt ? yt.vals : EMPTY9.slice())}</tr>`;
   }
   tbody.innerHTML = html;
   renderKpiRow(1, '', null);

@@ -582,10 +582,12 @@ function renderAy(){
   renderHead(['Yıl','Ay Adı', ...METRIC_HEADS], 2);
   const tbody = document.getElementById('tbody');
   let html = '';
+  // sadece cirosu gerçekleşmiş (gelecek/boş) aylar hariç
+  const hasCiro = (m) => m.vals[2]!==null && m.vals[2]!==undefined;
 
   if(activeYear==='all'){
     [2026,2025,2024].forEach(yr=>{
-      AY_YIL_DATA.months.filter(m=>m.year===yr).forEach(m=>{
+      AY_YIL_DATA.months.filter(m=>m.year===yr && hasCiro(m)).forEach(m=>{
         html += `<tr><td class="lead">${m.year}</td><td class="lead">${m.ayAdi}</td>${metricCells(m.vals)}</tr>`;
       });
       const yt = AY_YIL_DATA.yearTotals.find(y=>y.year===yr);
@@ -595,7 +597,7 @@ function renderAy(){
     tbody.innerHTML = html;
     renderKpiRow(2, 'Tümü', AY_YIL_DATA.genelToplam);
   } else {
-    AY_YIL_DATA.months.filter(m=>m.year===activeYear).forEach(m=>{
+    AY_YIL_DATA.months.filter(m=>m.year===activeYear && hasCiro(m)).forEach(m=>{
       html += `<tr><td class="lead">${m.year}</td><td class="lead">${m.ayAdi}</td>${metricCells(m.vals)}</tr>`;
     });
     const yt = AY_YIL_DATA.yearTotals.find(y=>y.year===activeYear);
@@ -611,12 +613,12 @@ function renderYil(){
   let html = '';
   if(activeYear==='all'){
     AY_YIL_DATA.yearTotals.forEach(y=>{
-      html += `<tr class="yeartotal"><td class="lead">${y.year}</td>${metricCellsPlain(y.vals)}</tr>`;
+      html += `<tr class="yeartotal"><td class="lead">${y.year}</td>${metricCells(y.vals)}</tr>`;
     });
-    html += `<tr class="grandtotal"><td class="lead">Genel Toplam</td>${metricCellsPlain(AY_YIL_DATA.genelToplam)}</tr>`;
+    html += `<tr class="grandtotal"><td class="lead">Genel Toplam</td>${metricCells(AY_YIL_DATA.genelToplam)}</tr>`;
   } else {
     const yt = AY_YIL_DATA.yearTotals.find(y=>y.year===activeYear);
-    html += `<tr class="grandtotal"><td class="lead">${activeYear}</td>${metricCellsPlain(yt ? yt.vals : EMPTY9.slice())}</tr>`;
+    html += `<tr class="grandtotal"><td class="lead">${activeYear}</td>${metricCells(yt ? yt.vals : EMPTY9.slice())}</tr>`;
   }
   tbody.innerHTML = html;
   renderKpiRow(1, '', null);

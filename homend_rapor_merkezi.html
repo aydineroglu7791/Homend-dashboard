@@ -243,6 +243,7 @@
           <label>Yıl</label>
           <select id="yearSelect"></select>
         </div>
+        <button class="meta-pill refresh-btn" id="clearFiltersPO" title="Filtreleri Temizle">✕ Filtreleri Temizle</button>
         <button class="meta-pill refresh-btn" id="refreshBtnPO" title="Sayfayı Yenile">⟳ Sayfayı Yenile</button>
       </div>
     </div>
@@ -295,6 +296,7 @@
             <option value="OWNWEB">OWNWEB</option>
           </select>
         </div>
+        <button class="meta-pill refresh-btn" id="clearFiltersEticaret" title="Filtreleri Temizle">✕ Filtreleri Temizle</button>
         <button class="meta-pill refresh-btn" id="refreshBtnEticaret" title="Sayfayı Yenile">⟳ Sayfayı Yenile</button>
       </div>
     </div>
@@ -339,6 +341,7 @@
           <label>Yıl</label>
           <select id="toptanYearSelect"></select>
         </div>
+        <button class="meta-pill refresh-btn" id="clearFiltersToptan" title="Filtreleri Temizle">✕ Filtreleri Temizle</button>
         <button class="meta-pill refresh-btn" id="refreshBtnToptan" title="Sayfayı Yenile">⟳ Sayfayı Yenile</button>
       </div>
     </div>
@@ -391,6 +394,7 @@
           <label>Şirket</label>
           <select id="kurumsalSirketSelect"></select>
         </div>
+        <button class="meta-pill refresh-btn" id="clearFiltersKurumsal" title="Filtreleri Temizle">✕ Filtreleri Temizle</button>
         <button class="meta-pill refresh-btn" id="refreshBtnKurumsal" title="Sayfayı Yenile">⟳ Sayfayı Yenile</button>
       </div>
     </div>
@@ -435,6 +439,7 @@
           <label>Yıl</label>
           <select id="grupiciYearSelect"></select>
         </div>
+        <button class="meta-pill refresh-btn" id="clearFiltersGrupici" title="Filtreleri Temizle">✕ Filtreleri Temizle</button>
         <button class="meta-pill refresh-btn" id="refreshBtnGrupici" title="Sayfayı Yenile">⟳ Sayfayı Yenile</button>
       </div>
     </div>
@@ -718,6 +723,11 @@ yearSelect.addEventListener('change', ()=>{
   activeYear = (v==='all') ? 'all' : Number(v);
   renderPerakendeOzet();
 });
+document.getElementById('clearFiltersPO').addEventListener('click', ()=>{
+  activeYear = 'all';
+  rebuildYearSelect();
+  renderPerakendeOzet();
+});
 
 document.querySelectorAll('#page-perakende-ozet .tab').forEach(t=>{
   t.addEventListener('click', ()=>{
@@ -921,6 +931,14 @@ eticaretYearSelect.addEventListener('change', ()=>{
 const eticaretKanalSelect = document.getElementById('eticaretKanalSelect');
 eticaretKanalSelect.addEventListener('change', ()=>{
   eticaretActiveKanal = eticaretKanalSelect.value;
+  renderEticaretOzet();
+});
+
+document.getElementById('clearFiltersEticaret').addEventListener('click', ()=>{
+  eticaretActiveYear = 'all';
+  eticaretActiveKanal = 'all';
+  rebuildEticaretYearSelect();
+  eticaretKanalSelect.value = 'all';
   renderEticaretOzet();
 });
 
@@ -1167,6 +1185,11 @@ toptanYearSelect.addEventListener('change', ()=>{
   toptanActiveYear = (v==='all') ? 'all' : Number(v);
   renderToptanOzet();
 });
+document.getElementById('clearFiltersToptan').addEventListener('click', ()=>{
+  toptanActiveYear = 'all';
+  rebuildToptanYearSelect();
+  renderToptanOzet();
+});
 
 document.querySelectorAll('#page-toptan-ozet .tab').forEach(t=>{
   t.addEventListener('click', ()=>{
@@ -1391,6 +1414,16 @@ kurumsalKanalSelect.addEventListener('change', ()=>{
 });
 kurumsalSirketSelect.addEventListener('change', ()=>{
   kurumsalActiveSirket = kurumsalSirketSelect.value;
+  renderKurumsalOzet();
+});
+
+document.getElementById('clearFiltersKurumsal').addEventListener('click', ()=>{
+  kurumsalActiveYear = 'all';
+  kurumsalActiveKanal = 'all';
+  kurumsalActiveSirket = 'all';
+  rebuildKurumsalYearSelect();
+  rebuildKurumsalKanalSelect();
+  rebuildKurumsalSirketSelect();
   renderKurumsalOzet();
 });
 
@@ -1655,6 +1688,11 @@ rebuildGrupiciYearSelect();
 grupiciYearSelect.addEventListener('change', ()=>{
   const v = grupiciYearSelect.value;
   grupiciActiveYear = (v==='all') ? 'all' : Number(v);
+  renderGrupiciOzet();
+});
+document.getElementById('clearFiltersGrupici').addEventListener('click', ()=>{
+  grupiciActiveYear = 'all';
+  rebuildGrupiciYearSelect();
   renderGrupiciOzet();
 });
 

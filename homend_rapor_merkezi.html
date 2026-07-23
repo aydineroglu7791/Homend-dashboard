@@ -107,13 +107,13 @@
   .toast.show{opacity:1;transform:translate(-50%,0);}
   .toast .tdot{width:7px;height:7px;border-radius:50%;background:var(--green-300);}
 
-  /* ============ PERAKENDE ÖZET PAGE ============ */
-  #page-perakende-ozet .topbar{
+  /* ============ RAPOR SAYFALARI (Perakende, E-Ticaret, vb. hepsi bu ortak stili kullanır) ============ */
+  .report-page .topbar{
     background:linear-gradient(120deg,var(--green-900) 0%,var(--green-700) 55%,var(--green-500) 100%);
     border-radius:18px;padding:20px 26px;color:#fff;position:relative;overflow:hidden;
     box-shadow:var(--shadow);margin-bottom:14px;
   }
-  #page-perakende-ozet .topbar::after{
+  .report-page .topbar::after{
     content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;
     background:radial-gradient(circle,rgba(255,255,255,.14) 0%,rgba(255,255,255,0) 70%);
   }
@@ -211,7 +211,7 @@
 </div>
 
 <!-- ================= SAYFA 2: PERAKENDE ÖZET ================= -->
-<div id="page-perakende-ozet" class="page">
+<div id="page-perakende-ozet" class="page report-page">
   <div class="wrap">
     <div class="topbar">
       <button class="backlink" id="backToHome">&larr; Ana Sayfa</button>
@@ -255,7 +255,7 @@
 </div>
 
 <!-- ================= SAYFA 3: E-TİCARET ÖZET ================= -->
-<div id="page-eticaret-ozet" class="page">
+<div id="page-eticaret-ozet" class="page report-page">
   <div class="wrap">
     <div class="topbar">
       <button class="backlink" id="backToHomeFromEticaret">&larr; Ana Sayfa</button>

@@ -1084,7 +1084,9 @@ function renderEticaretYil(){
       html += `<tr class="${stripe}"><td class="lead">${y.year}</td><td class="lead">${row.kanal}</td>${eticaretMetricCells(row.vals)}</tr>`;
     });
     const yTot = eticaretActiveKanal==='all' ? y.total : combineEticaretTotals(filteredRows);
-    html += `<tr class="totalrow"><td class="lead" colspan="2">Toplam ${y.year}</td>${eticaretMetricCellsPlain(yTot)}</tr>`;
+    if(sortedRows.length > 1){
+      html += `<tr class="totalrow"><td class="lead" colspan="2">Toplam ${y.year}</td>${eticaretMetricCellsPlain(yTot)}</tr>`;
+    }
     return yTot;
   }
 

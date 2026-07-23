@@ -383,6 +383,14 @@
           <label>Yıl</label>
           <select id="kurumsalYearSelect"></select>
         </div>
+        <div class="yearsel" id="kurumsalKanalSelWrap">
+          <label>Kanal Adı</label>
+          <select id="kurumsalKanalSelect"></select>
+        </div>
+        <div class="yearsel" id="kurumsalSirketSelWrap">
+          <label>Şirket</label>
+          <select id="kurumsalSirketSelect"></select>
+        </div>
         <button class="meta-pill refresh-btn" id="refreshBtnKurumsal" title="Sayfayı Yenile">⟳ Sayfayı Yenile</button>
       </div>
     </div>
@@ -1295,6 +1303,8 @@ const METRIC_HEADS_KURUMSAL = METRIC_HEADS_TOPTAN;
 
 let kurumsalActiveTab = 'hafta';
 let kurumsalActiveYear = 'all';
+let kurumsalActiveKanal = 'all';
+let kurumsalActiveSirket = 'all';
 
 const kurumsalYearSelect = document.getElementById('kurumsalYearSelect');
 function rebuildKurumsalYearSelect(){
@@ -1309,8 +1319,75 @@ rebuildKurumsalYearSelect();
 kurumsalYearSelect.addEventListener('change', ()=>{
   const v = kurumsalYearSelect.value;
   kurumsalActiveYear = (v==='all') ? 'all' : Number(v);
+  rebuildKurumsalKanalSelect();
+  rebuildKurumsalSirketSelect();
   renderKurumsalOzet();
 });
+
+// Kanal Adı ve Şirket seçeneklerini seçili Yıl'a göre dinamik hesaplayan yardımcılar
+function kurumsalForEachRow(cb){
+  KURUMSAL_HAFTA_DATA.forEach(w=> w.rows.forEach(r=> cb(w.year, r.kanal, r.sirket)));
+  KURUMSAL_YIL_DATA.forEach(y=> y.rows.forEach(r=> cb(y.year, r.kanal, r.sirket)));
+  KURUMSAL_AY_YIL_DATA.months.forEach(m=> m.rows.forEach(r=> cb(m.year, r.kanal, r.sirket)));
+}
+function kurumsalAvailableKanallar(yearFilter){
+  const set = new Set();
+  kurumsalForEachRow((y,k,s)=>{ if(yearFilter==='all' || y===yearFilter) set.add(k); });
+  return Array.from(set).sort();
+}
+function kurumsalAvailableSirketler(yearFilter, kanalFilter){
+  const set = new Set();
+  kurumsalForEachRow((y,k,s)=>{
+    if((yearFilter==='all' || y===yearFilter) && (kanalFilter==='all' || k===kanalFilter)) set.add(s);
+  });
+  return Array.from(set).sort();
+}
+
+const kurumsalKanalSelect = document.getElementById('kurumsalKanalSelect');
+function rebuildKurumsalKanalSelect(){
+  const secenekler = ['all', ...kurumsalAvailableKanallar(kurumsalActiveYear)];
+  if(!secenekler.includes(kurumsalActiveKanal)) kurumsalActiveKanal = 'all';
+  kurumsalKanalSelect.innerHTML = '';
+  secenekler.forEach(k=>{
+    const o = document.createElement('option'); o.value=k; o.textContent=(k==='all'?'Tümü':k);
+    if(k===kurumsalActiveKanal) o.selected = true;
+    kurumsalKanalSelect.appendChild(o);
+  });
+}
+
+const kurumsalSirketSelect = document.getElementById('kurumsalSirketSelect');
+function rebuildKurumsalSirketSelect(){
+  const secenekler = ['all', ...kurumsalAvailableSirketler(kurumsalActiveYear, kurumsalActiveKanal)];
+  if(!secenekler.includes(kurumsalActiveSirket)) kurumsalActiveSirket = 'all';
+  kurumsalSirketSelect.innerHTML = '';
+  secenekler.forEach(s=>{
+    const o = document.createElement('option'); o.value=s; o.textContent=(s==='all'?'Tümü':s);
+    if(s===kurumsalActiveSirket) o.selected = true;
+    kurumsalSirketSelect.appendChild(o);
+  });
+}
+
+rebuildKurumsalKanalSelect();
+rebuildKurumsalSirketSelect();
+
+kurumsalKanalSelect.addEventListener('change', ()=>{
+  kurumsalActiveKanal = kurumsalKanalSelect.value;
+  kurumsalActiveSirket = 'all'; // kanal değişince şirket seçimini sıfırla, listesi de değişiyor
+  rebuildKurumsalSirketSelect();
+  renderKurumsalOzet();
+});
+kurumsalSirketSelect.addEventListener('change', ()=>{
+  kurumsalActiveSirket = kurumsalSirketSelect.value;
+  renderKurumsalOzet();
+});
+
+// Kanal+Şirket filtresini bir satırlar dizisine uygulayan ortak yardımcı fonksiyon
+function filterKurumsalRows(rows){
+  return rows.filter(r=>
+    (kurumsalActiveKanal==='all' || r.kanal===kurumsalActiveKanal) &&
+    (kurumsalActiveSirket==='all' || r.sirket===kurumsalActiveSirket)
+  );
+}
 
 document.querySelectorAll('#page-kurumsal-ozet .tab').forEach(t=>{
   t.addEventListener('click', ()=>{
@@ -1363,24 +1440,38 @@ function renderKurumsalHafta(){
   const tbody = document.getElementById('kurumsalTbody');
   let html = ''; let rowCounter = 0;
   weeks.forEach(w=>{
-    const sortedRows = w.rows.slice().sort((a,b)=> (b.vals[3]||0) - (a.vals[3]||0));
+    const filteredRows = filterKurumsalRows(w.rows);
+    if(filteredRows.length===0) return;
+    const sortedRows = filteredRows.slice().sort((a,b)=> (b.vals[3]||0) - (a.vals[3]||0));
     sortedRows.forEach(row=>{
       rowCounter++;
       const stripe = rowCounter%2===0 ? ' stripe' : '';
       html += `<tr class="${stripe}"><td class="lead">${w.weekNum} ${w.year}</td><td class="lead">${row.kanal}</td><td class="lead">${row.sirket}</td>${toptanMetricCells(row.vals)}</tr>`;
     });
-    html += `<tr class="totalrow"><td class="lead" colspan="3">Hafta ${w.weekNum} ${w.year} Toplamı</td>${toptanMetricCells(w.total)}</tr>`;
+    if(sortedRows.length > 1){
+      const wTot = filteredRows.length===w.rows.length ? w.total : combineToptanTotals(filteredRows);
+      html += `<tr class="totalrow"><td class="lead" colspan="3">Hafta ${w.weekNum} ${w.year} Toplamı</td>${toptanMetricCells(wTot)}</tr>`;
+    }
   });
   tbody.innerHTML = html;
 
   let kpiVals, kpiLabel;
-  if(kurumsalActiveYear==='all'){
-    kpiVals = combineToptanTotals(KURUMSAL_AY_YIL_DATA.yearTotals);
-    kpiLabel = 'Tümü';
+  const yearLabel = kurumsalActiveYear==='all' ? 'Tümü' : (kurumsalActiveYear + ' Toplamı');
+  if(kurumsalActiveKanal==='all' && kurumsalActiveSirket==='all'){
+    if(kurumsalActiveYear==='all'){
+      kpiVals = combineToptanTotals(KURUMSAL_AY_YIL_DATA.yearTotals);
+    } else {
+      const yt = KURUMSAL_AY_YIL_DATA.yearTotals.find(y=>y.year===kurumsalActiveYear);
+      kpiVals = yt ? yt.vals : EMPTY4.slice();
+    }
+    kpiLabel = yearLabel;
   } else {
-    const yt = KURUMSAL_AY_YIL_DATA.yearTotals.find(y=>y.year===kurumsalActiveYear);
-    kpiVals = yt ? yt.vals : EMPTY4.slice();
-    kpiLabel = kurumsalActiveYear + ' Toplamı';
+    const scopeWeeks = kurumsalActiveYear==='all' ? KURUMSAL_HAFTA_DATA : KURUMSAL_HAFTA_DATA.filter(w=>w.year===kurumsalActiveYear);
+    const rows = [];
+    scopeWeeks.forEach(w=> filterKurumsalRows(w.rows).forEach(r=>rows.push(r)));
+    kpiVals = combineToptanTotals(rows);
+    const filterBits = [kurumsalActiveKanal!=='all'?kurumsalActiveKanal:null, kurumsalActiveSirket!=='all'?kurumsalActiveSirket:null].filter(Boolean).join(' · ');
+    kpiLabel = yearLabel + ' · ' + filterBits;
   }
   renderKurumsalKpiRow(3, kpiLabel, kpiVals);
 }
@@ -1392,31 +1483,61 @@ function renderKurumsalAy(){
   let html = ''; let rowCounter = 0;
 
   function renderMonth(m){
-    const sortedRows = m.rows.slice().sort((a,b)=> (b.vals[3]||0) - (a.vals[3]||0));
+    const filteredRows = filterKurumsalRows(m.rows);
+    if(filteredRows.length===0) return null;
+    const sortedRows = filteredRows.slice().sort((a,b)=> (b.vals[3]||0) - (a.vals[3]||0));
     sortedRows.forEach(row=>{
       rowCounter++;
       const stripe = rowCounter%2===0 ? ' stripe' : '';
       html += `<tr class="${stripe}"><td class="lead">${m.year}</td><td class="lead">${m.ayAdi}</td><td class="lead">${row.kanal}</td><td class="lead">${row.sirket}</td>${toptanMetricCells(row.vals)}</tr>`;
     });
-    html += `<tr class="totalrow"><td class="lead" colspan="4">Toplam ${m.ayAdi}</td>${toptanMetricCells(m.total)}</tr>`;
+    const mTot = filteredRows.length===m.rows.length ? m.total : combineToptanTotals(filteredRows);
+    if(sortedRows.length > 1){
+      html += `<tr class="totalrow"><td class="lead" colspan="4">Toplam ${m.ayAdi}</td>${toptanMetricCells(mTot)}</tr>`;
+    }
+    return mTot;
   }
 
   if(kurumsalActiveYear==='all'){
     [2026,2025,2024].forEach(yr=>{
-      KURUMSAL_AY_YIL_DATA.months.filter(m=>m.year===yr).slice().reverse().forEach(renderMonth);
-      const yt = KURUMSAL_AY_YIL_DATA.yearTotals.find(y=>y.year===yr);
-      if(yt) html += `<tr class="yeartotal"><td class="lead" colspan="4">Toplam ${yr}</td>${toptanMetricCells(yt.vals)}</tr>`;
+      const monthTots = [];
+      KURUMSAL_AY_YIL_DATA.months.filter(m=>m.year===yr).slice().reverse().forEach(m=>{
+        const t = renderMonth(m); if(t) monthTots.push({vals:t});
+      });
+      const noFilter = kurumsalActiveKanal==='all' && kurumsalActiveSirket==='all';
+      if(noFilter){
+        const yt = KURUMSAL_AY_YIL_DATA.yearTotals.find(y=>y.year===yr);
+        if(yt) html += `<tr class="yeartotal"><td class="lead" colspan="4">Toplam ${yr}</td>${toptanMetricCells(yt.vals)}</tr>`;
+      } else if(monthTots.length){
+        html += `<tr class="yeartotal"><td class="lead" colspan="4">Toplam ${yr}</td>${toptanMetricCells(combineToptanTotals(monthTots))}</tr>`;
+      }
     });
-    const genel = combineToptanTotals(KURUMSAL_AY_YIL_DATA.yearTotals);
+    let genel;
+    if(kurumsalActiveKanal==='all' && kurumsalActiveSirket==='all'){
+      genel = combineToptanTotals(KURUMSAL_AY_YIL_DATA.yearTotals);
+    } else {
+      const allRows = [];
+      KURUMSAL_AY_YIL_DATA.months.forEach(m=> filterKurumsalRows(m.rows).forEach(r=>allRows.push(r)));
+      genel = combineToptanTotals(allRows);
+    }
     html += `<tr class="grandtotal"><td class="lead" colspan="4">Genel Toplam</td>${toptanMetricCells(genel)}</tr>`;
     tbody.innerHTML = html;
     renderKurumsalKpiRow(4, 'Tümü', genel);
   } else {
-    KURUMSAL_AY_YIL_DATA.months.filter(m=>m.year===kurumsalActiveYear).slice().reverse().forEach(renderMonth);
-    const yt = KURUMSAL_AY_YIL_DATA.yearTotals.find(y=>y.year===kurumsalActiveYear);
-    if(yt) html += `<tr class="yeartotal"><td class="lead" colspan="4">Toplam ${kurumsalActiveYear}</td>${toptanMetricCells(yt.vals)}</tr>`;
+    const monthTots = [];
+    KURUMSAL_AY_YIL_DATA.months.filter(m=>m.year===kurumsalActiveYear).slice().reverse().forEach(m=>{
+      const t = renderMonth(m); if(t) monthTots.push({vals:t});
+    });
+    let yTot;
+    if(kurumsalActiveKanal==='all' && kurumsalActiveSirket==='all'){
+      const yt = KURUMSAL_AY_YIL_DATA.yearTotals.find(y=>y.year===kurumsalActiveYear);
+      yTot = yt ? yt.vals : EMPTY4.slice();
+    } else {
+      yTot = monthTots.length ? combineToptanTotals(monthTots) : EMPTY4.slice();
+    }
+    html += `<tr class="yeartotal"><td class="lead" colspan="4">Toplam ${kurumsalActiveYear}</td>${toptanMetricCells(yTot)}</tr>`;
     tbody.innerHTML = html;
-    renderKurumsalKpiRow(4, kurumsalActiveYear + ' Toplamı', yt ? yt.vals : EMPTY4.slice());
+    renderKurumsalKpiRow(4, kurumsalActiveYear + ' Toplamı', yTot);
   }
 }
 
@@ -1427,21 +1548,28 @@ function renderKurumsalYil(){
   let html = ''; let rowCounter = 0;
 
   function renderYear(y){
-    const sortedRows = y.rows.slice().sort((a,b)=> (b.vals[3]||0) - (a.vals[3]||0));
+    const filteredRows = filterKurumsalRows(y.rows);
+    if(filteredRows.length===0) return null;
+    const sortedRows = filteredRows.slice().sort((a,b)=> (b.vals[3]||0) - (a.vals[3]||0));
     sortedRows.forEach(row=>{
       rowCounter++;
       const stripe = rowCounter%2===0 ? ' stripe' : '';
       html += `<tr class="${stripe}"><td class="lead">${y.year}</td><td class="lead">${row.kanal}</td><td class="lead">${row.sirket}</td>${toptanMetricCells(row.vals)}</tr>`;
     });
-    html += `<tr class="totalrow"><td class="lead" colspan="3">Toplam ${y.year}</td>${toptanMetricCells(y.total)}</tr>`;
+    const yTot = filteredRows.length===y.rows.length ? y.total : combineToptanTotals(filteredRows);
+    if(sortedRows.length > 1){
+      html += `<tr class="totalrow"><td class="lead" colspan="3">Toplam ${y.year}</td>${toptanMetricCells(yTot)}</tr>`;
+    }
+    return yTot;
   }
 
   if(kurumsalActiveYear==='all'){
+    const yearTots = [];
     [2026,2025,2024].forEach(yr=>{
       const y = KURUMSAL_YIL_DATA.find(x=>x.year===yr);
-      if(y) renderYear(y);
+      if(y){ const t = renderYear(y); if(t) yearTots.push({vals:t}); }
     });
-    const genel = combineToptanTotals(KURUMSAL_YIL_DATA.map(y=>({vals:y.total})));
+    const genel = combineToptanTotals(yearTots);
     html += `<tr class="grandtotal"><td class="lead" colspan="3">Genel Toplam</td>${toptanMetricCells(genel)}</tr>`;
     tbody.innerHTML = html;
   } else {

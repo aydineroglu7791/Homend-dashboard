@@ -74,7 +74,7 @@
   .searchbar svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted);}
   .search-count{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:11.5px;color:var(--muted);font-weight:600;display:none;}
 
-  .groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;}
+  .groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:16px;}
   .group{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);transition:.35s;}
   .group.no-match{opacity:.25;filter:grayscale(.5);}
   .group-head{display:flex;align-items:center;gap:11px;margin-bottom:13px;}
@@ -154,6 +154,8 @@
   thead tr.kpirow th.kpilabel{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;text-align:left;}
   tbody td{padding:5px 6px;text-align:right;border-bottom:1px solid var(--green-100);white-space:nowrap;}
   tbody tr:hover td{background:var(--green-100);}
+  tr.stripe td{background:#F3F7F4;}
+  tr.stripe:hover td{background:var(--green-100);}
   tbody tr:hover td.lead{box-shadow:inset 4px 0 0 var(--green-600);}
   tr.totalrow:hover td, tr.yeartotal:hover td{background:var(--green-800);}
   tr.grandtotal:hover td{background:var(--green-900);}
@@ -189,7 +191,7 @@
           </div>
         </div>
         <div class="topbar-meta">
-          <div class="meta-pill"><span class="dot"></span> 7 Rapor Grubu</div>
+          <div class="meta-pill"><span class="dot"></span> 3 Rapor Grubu</div>
           <div class="meta-pill" id="btnCountPill">— Rapor</div>
           <div class="meta-pill">Son Güncelleme: 21.07.2026</div>
           <button class="meta-pill refresh-btn" id="refreshBtnHome" title="Sayfayı Yenile">⟳ Sayfayı Yenile</button>
@@ -218,7 +220,7 @@
           <div class="brand-badge">PÖ</div>
           <div>
             <h1>Perakende Özet</h1>
-            <p>Perakende Hafta / Ay / Yıl özet raporu</p>
+            <p>Ciro Raporları · Perakende</p>
           </div>
         </div>
         <div class="tabs">
@@ -274,25 +276,19 @@ const ICONS = {
   truck: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="14" height="10"/><path d="M15 10h4l3 3v4h-7z"/><circle cx="6" cy="19" r="1.6"/><circle cx="17.5" cy="19" r="1.6"/></svg>',
   sigma: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5H6l7 7-7 7h12"/></svg>',
   compass: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="15,9 13.5,13.5 9,15 10.5,10.5"/></svg>',
-  gear: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V19a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.04H4a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.56-1.04 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H10a1.7 1.7 0 0 0 1.04-1.56V4a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.04 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V10a1.7 1.7 0 0 0 1.56 1.04H20a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.04z"/></svg>'
+  gear: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V19a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.04H4a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.56-1.04 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H10a1.7 1.7 0 0 0 1.04-1.56V4a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.04 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V10a1.7 1.7 0 0 0 1.56 1.04H20a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.04z"/></svg>',
+  box: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>'
 };
 
-// Buton href'leri "view:sayfaId:sekme" formatında -> tıklayınca sayfa içinde geçiş yapar
+// Ana yapı: 3 ana rapor başlığı, her birinin altında alt raporlar
+// Her alt rapor kendi sayfasında Hafta/Ay/Yıl sekmeleriyle açılacak
 const GROUPS = [
-  { title:"Perakende Hafta", icon:"store", shade:"var(--green-900)",
-    buttons:[{name:"Perakende Özetler", href:"view:perakende-ozet:hafta"},"Per Mağaza Haf","Grup Per Haf","Per. Ürün Hafta","Per Ürün Gr Haf","Grup Shark Haf","Mağ KPI Karş","Ür Gru KPI Karş","Dış Marka Oran"] },
-  { title:"Perakende Ay / Yıl", icon:"calendar", shade:"var(--green-800)",
-    buttons:[{name:"Per. Özet Ay", href:"view:perakende-ozet:ay"},"Per. Mağaza Ay","Grup Per Ay","Per. Ürün Ay","Per Ürün Gr Ay","Grup İçi Shark",{name:"Per Özet Yıl", href:"view:perakende-ozet:yil"},"Per Mağaza Yıl","Grup Per Yıl"] },
-  { title:"E-Ticaret & Kurumsal", icon:"globe", shade:"var(--green-700)",
-    buttons:["E Ticaret Haf","E Ticaret Ay","Kurum Satış Hf","MP Hafta","Kurum Satış Ay","MP Ay"] },
-  { title:"Toptan", icon:"truck", shade:"var(--green-600)",
-    buttons:["Top Satış Haf","Top Sat Ür Gr","Top Satış Ay","Top Sat Ür Gr","Top Sat Ür Gr"] },
-  { title:"Toplamlar", icon:"sigma", shade:"var(--green-500)",
-    buttons:["Toplam Satış","Toplam Ciro Ay","Ürün Gr Cir Haf","Ürün Gr Ad Haf","Ürün Rap Haf","Tüm Ürün Ay","Top Ür Gr Cir","Top Ür Gr Adet","Yıl Bütçe"] },
-  { title:"S&OP", icon:"compass", shade:"var(--green-400)",
-    buttons:["Cover Raporu","Satış Trendi","S&OP Adet","Sas Stok Detay","Fiyatlandırma","S&OP Maaliyet","SAS Raporu","S&OP Notları"] },
-  { title:"Admin", icon:"gear", shade:"var(--green-300)",
-    buttons:["Tema Kataloğu","Butonları"] },
+  { title:"Ciro Raporları", icon:"sigma", shade:"var(--green-900)",
+    buttons:[{name:"Perakende", href:"view:perakende-ozet:hafta"},"E-Ticaret","Kurumsal","Toptan","Grup İçi Markalar"] },
+  { title:"Ürün Raporları", icon:"box", shade:"var(--green-700)",
+    buttons:["Perakende","E-Ticaret","Kurumsal","Toptan","Grup İçi Markalar"] },
+  { title:"S&OP Raporları", icon:"compass", shade:"var(--green-500)",
+    buttons:["Ürün Adet","Maliyet","Fiyatlandırma"] },
 ];
 
 const groupsWrap = document.getElementById('groupsWrap');
@@ -559,12 +555,15 @@ function renderHafta(){
 
   const tbody = document.getElementById('tbody');
   let html = '';
+  let rowCounter = 0;
   weeks.forEach(w=>{
     const daysDesc = w.days.slice().sort((a,b)=> parseTRDate(b[0]) - parseTRDate(a[0]));
     daysDesc.forEach(d=>{
+      rowCounter++;
+      const stripe = rowCounter%2===0 ? ' stripe' : '';
       const dt = parseTRDate(d[0]);
       const vals = d.slice(1);
-      html += `<tr><td class="lead">${ayAdiFromDate(dt)}</td><td class="lead">${w.weekNum} ${w.year}</td><td class="lead">${d[0]}</td>${metricCells(vals)}</tr>`;
+      html += `<tr class="${stripe}"><td class="lead">${ayAdiFromDate(dt)}</td><td class="lead">${w.weekNum} ${w.year}</td><td class="lead">${d[0]}</td>${metricCells(vals)}</tr>`;
     });
     html += `<tr class="totalrow"><td class="lead" colspan="3">Hafta ${w.weekNum} ${w.year} Toplamı</td>${metricCellsPlain(w.total)}</tr>`;
   });
@@ -586,13 +585,16 @@ function renderAy(){
   renderHead(['Yıl','Ay Adı', ...METRIC_HEADS], 2);
   const tbody = document.getElementById('tbody');
   let html = '';
+  let rowCounter = 0;
   // sadece cirosu gerçekleşmiş (gelecek/boş) aylar hariç
   const hasCiro = (m) => m.vals[2]!==null && m.vals[2]!==undefined;
 
   if(activeYear==='all'){
     [2026,2025,2024].forEach(yr=>{
       AY_YIL_DATA.months.filter(m=>m.year===yr && hasCiro(m)).forEach(m=>{
-        html += `<tr><td class="lead">${m.year}</td><td class="lead">${m.ayAdi}</td>${metricCells(m.vals)}</tr>`;
+        rowCounter++;
+        const stripe = rowCounter%2===0 ? ' stripe' : '';
+        html += `<tr class="${stripe}"><td class="lead">${m.year}</td><td class="lead">${m.ayAdi}</td>${metricCells(m.vals)}</tr>`;
       });
       const yt = AY_YIL_DATA.yearTotals.find(y=>y.year===yr);
       if(yt) html += `<tr class="yeartotal"><td class="lead" colspan="2">Toplam ${yr}</td>${metricCellsPlain(yt.vals)}</tr>`;
@@ -602,7 +604,9 @@ function renderAy(){
     renderKpiRow(2, 'Tümü', AY_YIL_DATA.genelToplam);
   } else {
     AY_YIL_DATA.months.filter(m=>m.year===activeYear && hasCiro(m)).forEach(m=>{
-      html += `<tr><td class="lead">${m.year}</td><td class="lead">${m.ayAdi}</td>${metricCells(m.vals)}</tr>`;
+      rowCounter++;
+      const stripe = rowCounter%2===0 ? ' stripe' : '';
+      html += `<tr class="${stripe}"><td class="lead">${m.year}</td><td class="lead">${m.ayAdi}</td>${metricCells(m.vals)}</tr>`;
     });
     const yt = AY_YIL_DATA.yearTotals.find(y=>y.year===activeYear);
     if(yt) html += `<tr class="totalrow"><td class="lead" colspan="2">Toplam ${yt.year}</td>${metricCellsPlain(yt.vals)}</tr>`;
@@ -616,8 +620,9 @@ function renderYil(){
   const tbody = document.getElementById('tbody');
   let html = '';
   if(activeYear==='all'){
-    AY_YIL_DATA.yearTotals.forEach(y=>{
-      html += `<tr><td class="lead">${y.year}</td>${metricCells(y.vals)}</tr>`;
+    AY_YIL_DATA.yearTotals.forEach((y,i)=>{
+      const stripe = i%2===1 ? ' stripe' : '';
+      html += `<tr class="${stripe}"><td class="lead">${y.year}</td>${metricCells(y.vals)}</tr>`;
     });
     html += `<tr class="grandtotal"><td class="lead">Genel Toplam</td>${metricCellsPlain(AY_YIL_DATA.genelToplam)}</tr>`;
   } else {

@@ -298,6 +298,50 @@
   </div>
 </div>
 
+<!-- ================= SAYFA 4: TOPTAN ÖZET ================= -->
+<div id="page-toptan-ozet" class="page report-page">
+  <div class="wrap">
+    <div class="topbar">
+      <button class="backlink" id="backToHomeFromToptan">&larr; Ana Sayfa</button>
+      <div class="topbar-row">
+        <div class="titlerow">
+          <div class="brand-badge">TP</div>
+          <div>
+            <h1>Toptan Özet</h1>
+            <p>Ciro Raporları · Toptan</p>
+          </div>
+        </div>
+        <div class="tabs" id="toptanTabs">
+          <div class="tab" data-tab="hafta">Haftalık</div>
+          <div class="tab" data-tab="ay">Aylık</div>
+          <div class="tab" data-tab="yil">Yıllık</div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="yearsel" id="toptanYearSelWrap">
+          <label>Yıl</label>
+          <select id="toptanYearSelect"></select>
+        </div>
+        <button class="meta-pill refresh-btn" id="refreshBtnToptan" title="Sayfayı Yenile">⟳ Sayfayı Yenile</button>
+      </div>
+    </div>
+
+    <div class="tablecard">
+      <div class="tablescroll">
+        <table>
+          <thead>
+            <tr id="toptanTheadRow"></tr>
+            <tr id="toptanKpiRow" class="kpirow"></tr>
+          </thead>
+          <tbody id="toptanTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer>Homend Rapor Merkezi · Toptan Özet · veri: yüklenen Excel çıkışı · tüm tutarlar TL</footer>
+  </div>
+</div>
+
 <div class="toast" id="toast"><span class="tdot"></span><span id="toastText"></span></div>
 
 <script>
@@ -328,7 +372,7 @@ const ICONS = {
 // Her alt rapor kendi sayfasında Hafta/Ay/Yıl sekmeleriyle açılacak
 const GROUPS = [
   { title:"Ciro Raporları", icon:"sigma", shade:"var(--green-900)",
-    buttons:[{name:"Perakende", href:"view:perakende-ozet:hafta"},{name:"E-Ticaret", href:"view:eticaret-ozet:hafta"},"Kurumsal","Toptan","Grup İçi Markalar"] },
+    buttons:[{name:"Perakende", href:"view:perakende-ozet:hafta"},{name:"E-Ticaret", href:"view:eticaret-ozet:hafta"},"Kurumsal",{name:"Toptan", href:"view:toptan-ozet:hafta"},"Grup İçi Markalar"] },
   { title:"Ürün Raporları", icon:"box", shade:"var(--green-700)",
     buttons:["Perakende","E-Ticaret","Kurumsal","Toptan","Grup İçi Markalar"] },
   { title:"S&OP Raporları", icon:"compass", shade:"var(--green-500)",
@@ -392,6 +436,8 @@ document.getElementById('refreshBtnHome').addEventListener('click', ()=> locatio
 document.getElementById('refreshBtnPO').addEventListener('click', ()=> location.reload());
 document.getElementById('backToHomeFromEticaret').addEventListener('click', ()=> showPage('home'));
 document.getElementById('refreshBtnEticaret').addEventListener('click', ()=> location.reload());
+document.getElementById('backToHomeFromToptan').addEventListener('click', ()=> showPage('home'));
+document.getElementById('refreshBtnToptan').addEventListener('click', ()=> location.reload());
 
 // Arama / filtreleme (ana sayfa)
 const searchInput = document.getElementById('searchInput');
@@ -878,6 +924,181 @@ function renderEticaretYil(){
 }
 
 renderEticaretOzet();
+
+/* =================================================================
+   SAYFA 4: TOPTAN ÖZET
+================================================================= */
+const TOPTAN_HAFTA_DATA = [{"label": "1 2025", "weekNum": 1, "year": 2025, "vals": [40, 87014.42, 53, 203193.06]}, {"label": "1 2024", "weekNum": 1, "year": 2024, "vals": [-13, -21805.09, 5, 1327.3599999999988]}, {"label": "1 2026", "weekNum": 1, "year": 2026, "vals": [135, 396930.74, 550, 1186376.37]}, {"label": "2 2026", "weekNum": 2, "year": 2026, "vals": [585, 1869472.2799999998, 352, 1158990.5699999998]}, {"label": "2 2025", "weekNum": 2, "year": 2025, "vals": [336, 780268.2500000003, 48, 65024.05000000002]}, {"label": "2 2024", "weekNum": 2, "year": 2024, "vals": [121, 231760.79000000007, null, null]}, {"label": "3 2026", "weekNum": 3, "year": 2026, "vals": [1498, 3479311.86, 711, 2125525.7100000004]}, {"label": "3 2025", "weekNum": 3, "year": 2025, "vals": [1334, 3055403.5700000008, 546, 1329808.2199999997]}, {"label": "3 2024", "weekNum": 3, "year": 2024, "vals": [100, 264203.928332, 38, 52600.59999999999]}, {"label": "4 2025", "weekNum": 4, "year": 2025, "vals": [696, 1817627.6700000009, 1421, 3234541.4399999985]}, {"label": "4 2026", "weekNum": 4, "year": 2026, "vals": [368, 1606397.78, 1294, 3384358.0300000026]}, {"label": "4 2024", "weekNum": 4, "year": 2024, "vals": [147, 312138.5, 66, 221698.14999999997]}, {"label": "5 2026", "weekNum": 5, "year": 2026, "vals": [558, 1628954.05, 569, 1987987.5699999994]}, {"label": "5 2025", "weekNum": 5, "year": 2025, "vals": [479, 911712.6500000005, 792, 1503453.1800000004]}, {"label": "5 2024", "weekNum": 5, "year": 2024, "vals": [330, 764168.1300000001, 323, 672711.02]}, {"label": "6 2024", "weekNum": 6, "year": 2024, "vals": [94, 217124.84999999998, 208, 529448.13]}, {"label": "6 2025", "weekNum": 6, "year": 2025, "vals": [199, 316396.5099999999, 230, 370910.3999999999]}, {"label": "6 2026", "weekNum": 6, "year": 2026, "vals": [218, 521757.72000000003, 424, 1041003.88]}, {"label": "7 2024", "weekNum": 7, "year": 2024, "vals": [439, 1513205.8099999998, 111, 281036.16000000003]}, {"label": "7 2026", "weekNum": 7, "year": 2026, "vals": [524, 2211610.38, 371, 953678.93]}, {"label": "7 2025", "weekNum": 7, "year": 2025, "vals": [407, 1111850.2999999996, 352, 914988.9499999996]}, {"label": "8 2024", "weekNum": 8, "year": 2024, "vals": [1212, 3252544.9200000004, 730, 2011444.5800000008]}, {"label": "8 2025", "weekNum": 8, "year": 2025, "vals": [821, 2047392.0599999998, 558, 1458936.9100000001]}, {"label": "8 2026", "weekNum": 8, "year": 2026, "vals": [1856, 5510307.530000003, 694, 2706792.6500000004]}, {"label": "9 2024", "weekNum": 9, "year": 2024, "vals": [64, 132265.51, 467, 1344013.3199999996]}, {"label": "9 2026", "weekNum": 9, "year": 2026, "vals": [516, 1607907.9499999997, 1411, 4112112.62]}, {"label": "9 2025", "weekNum": 9, "year": 2025, "vals": [636, 1570102.289999999, 1185, 3015581.2199999997]}, {"label": "10 2024", "weekNum": 10, "year": 2024, "vals": [785, 1676560.5099999995, 296, 718904.2100000001]}, {"label": "10 2026", "weekNum": 10, "year": 2026, "vals": [109, 349010.9199999999, 182, 592535.63]}, {"label": "10 2025", "weekNum": 10, "year": 2025, "vals": [-16, 19536.469999999965, 155, 551841.66]}, {"label": "11 2025", "weekNum": 11, "year": 2025, "vals": [15, 78088.18, 92, 269656.67999999993]}, {"label": "11 2024", "weekNum": 11, "year": 2024, "vals": [1689, 4087369.3433, 1343, 2995443.3699999996]}, {"label": "11 2026", "weekNum": 11, "year": 2026, "vals": [2005, 7868820.009999998, 479, 1616096.5799999994]}, {"label": "12 2025", "weekNum": 12, "year": 2025, "vals": [1045, 3021665.6100000017, 597, 1681538.7699999989]}, {"label": "12 2024", "weekNum": 12, "year": 2024, "vals": [584, 1485607.399979998, 651, 1872257.0299999989]}, {"label": "12 2026", "weekNum": 12, "year": 2026, "vals": [548, 2079953.74, 910, 3700489.6999999993]}, {"label": "13 2024", "weekNum": 13, "year": 2024, "vals": [870, 2119129.3283040007, 1867, 4335919.220000002]}, {"label": "13 2026", "weekNum": 13, "year": 2026, "vals": [599, 2756136.0300000003, 1188, 4327463.85]}, {"label": "13 2025", "weekNum": 13, "year": 2025, "vals": [775, 2484546.4199999995, 911, 2990148.600000001]}, {"label": "14 2025", "weekNum": 14, "year": 2025, "vals": [31, 95366.72000000004, 169, 463549.8]}, {"label": "14 2026", "weekNum": 14, "year": 2026, "vals": [37, 136811.33, 1196, 4950919.340000001]}, {"label": "14 2024", "weekNum": 14, "year": 2024, "vals": [55, 108769.23333, 101, 266245.27999999997]}, {"label": "15 2025", "weekNum": 15, "year": 2025, "vals": [113, 736518.3599999994, 40, -41390.31999999998]}, {"label": "15 2026", "weekNum": 15, "year": 2026, "vals": [317, 1961030.01, 120, 449856.41000000003]}, {"label": "15 2024", "weekNum": 15, "year": 2024, "vals": [null, null, -4, -4502.59]}, {"label": "16 2026", "weekNum": 16, "year": 2026, "vals": [979, 3364161.690000001, 724, 1956946.26]}, {"label": "16 2025", "weekNum": 16, "year": 2025, "vals": [577, 2178983.6999999997, 66, 310740.82999999996]}, {"label": "16 2024", "weekNum": 16, "year": 2024, "vals": [133, 366179.39995600004, 98, 407933.5]}, {"label": "17 2024", "weekNum": 17, "year": 2024, "vals": [423, 779049.3832089999, 209, 465531.69000000006]}, {"label": "17 2026", "weekNum": 17, "year": 2026, "vals": [270, 1196828.59, 245, 1686931.909999999]}, {"label": "17 2025", "weekNum": 17, "year": 2025, "vals": [510, 1553808.9499999995, 117, 382812.31]}, {"label": "18 2026", "weekNum": 18, "year": 2026, "vals": [364, 998479.3900000006, 399, 1418643.8899999997]}, {"label": "18 2024", "weekNum": 18, "year": 2024, "vals": [1216, 2351204.216236001, 160, 420087.7599999999]}, {"label": "18 2025", "weekNum": 18, "year": 2025, "vals": [275, 1041623.63, 621, 2283889.379999999]}, {"label": "19 2024", "weekNum": 19, "year": 2024, "vals": [175, 506597.191589, 989, 1696084.59]}, {"label": "19 2026", "weekNum": 19, "year": 2026, "vals": [1945, 5789704.2, 797, 2499620.309999998]}, {"label": "19 2025", "weekNum": 19, "year": 2025, "vals": [71, 287464.63, 900, 2956243.36]}, {"label": "20 2024", "weekNum": 20, "year": 2024, "vals": [550, 1686021.7114369988, 321, 709253.7400000001]}, {"label": "20 2026", "weekNum": 20, "year": 2026, "vals": [1628, 3906588.720000001, 1575, 4444100.910000001]}, {"label": "20 2025", "weekNum": 20, "year": 2025, "vals": [587, 1241284.1899999997, 85, 233710.5]}, {"label": "21 2024", "weekNum": 21, "year": 2024, "vals": [519, 1815779.3830809996, 344, 855332.6200000001]}, {"label": "21 2025", "weekNum": 21, "year": 2025, "vals": [497, 1879520.2999999989, 411, 965883.7599999995]}, {"label": "21 2026", "weekNum": 21, "year": 2026, "vals": [327, 1556566.42, 710, 2220009.85]}, {"label": "22 2026", "weekNum": 22, "year": 2026, "vals": [null, null, 1241, 3416191.43]}, {"label": "22 2025", "weekNum": 22, "year": 2025, "vals": [589, 1172577.8299999996, 554, 1906754.7499999995]}, {"label": "22 2024", "weekNum": 22, "year": 2024, "vals": [-8, -13101.420000000002, 157, 679491.4700000001]}, {"label": "23 2025", "weekNum": 23, "year": 2025, "vals": [0, 0, 147, 488121.8900000001]}, {"label": "23 2026", "weekNum": 23, "year": 2026, "vals": [131, 457748.08999999997, 33, -37133.6]}, {"label": "24 2026", "weekNum": 24, "year": 2026, "vals": [391, 2335714.5, -2, -4247.0599999999995]}, {"label": "24 2025", "weekNum": 24, "year": 2025, "vals": [182, 490285.8300000001, 225, 343045.30999999994]}, {"label": "24 2024", "weekNum": 24, "year": 2024, "vals": [20, 130705.8, null, null]}, {"label": "25 2026", "weekNum": 25, "year": 2026, "vals": [754, 2261423.349999997, 923, 4176526.450000001]}, {"label": "25 2025", "weekNum": 25, "year": 2025, "vals": [154, 524157.00999999995, 249, 693988.9699999999]}, {"label": "26 2026", "weekNum": 26, "year": 2026, "vals": [575, 2778087.21, 1336, 3645144.8700000006]}, {"label": "26 2025", "weekNum": 26, "year": 2025, "vals": [798, 1656063.2699999998, 43, 169319.28]}, {"label": "26 2024", "weekNum": 26, "year": 2024, "vals": [502, 621824.6900000001, 6, 56121.39]}, {"label": "27 2024", "weekNum": 27, "year": 2024, "vals": [691, 1829055.6500000006, 434, 682116.75]}, {"label": "27 2025", "weekNum": 27, "year": 2025, "vals": [89, 182677.7, 401, 1191251.57]}, {"label": "27 2026", "weekNum": 27, "year": 2026, "vals": [1322, 1685184.42, 173, 665320.32]}, {"label": "28 2024", "weekNum": 28, "year": 2024, "vals": [1054, 4061460.2300000014, 861, 1999031.6200000003]}, {"label": "28 2025", "weekNum": 28, "year": 2025, "vals": [968, 960115.8599999999, 1470, 1853023.0899999999]}, {"label": "28 2026", "weekNum": 28, "year": 2026, "vals": [91, 613830.4799999999, 1270, 1531776.5699999998]}, {"label": "29 2024", "weekNum": 29, "year": 2024, "vals": [287, 759395.9400000003, 274, 949272.4799999997]}, {"label": "29 2025", "weekNum": 29, "year": 2025, "vals": [133, 171729.86000000002, 266, 357258.8]}, {"label": "29 2026", "weekNum": 29, "year": 2026, "vals": [624, 1474264.3899999994, 182, 993037.3500000001]}, {"label": "30 2025", "weekNum": 30, "year": 2025, "vals": [201, 370827.65, 18, 77661.88999999997]}, {"label": "30 2026", "weekNum": 30, "year": 2026, "vals": [636, 2304738.1999999997, 24, 104823.33]}, {"label": "30 2024", "weekNum": 30, "year": 2024, "vals": [206, 779997.6800000002, 848, 3415367.900000001]}, {"label": "31 2024", "weekNum": 31, "year": 2024, "vals": [220, 699956.9299999999, 328, 1266880.89]}, {"label": "31 2025", "weekNum": 31, "year": 2025, "vals": [106, 287787.65, 348, 650413.33]}, {"label": "32 2024", "weekNum": 32, "year": 2024, "vals": [1223, 2757480.2200000007, 192, 284796.83999999997]}, {"label": "32 2025", "weekNum": 32, "year": 2025, "vals": [107, 408893.64999999997, 85, 181730.52000000005]}, {"label": "33 2025", "weekNum": 33, "year": 2025, "vals": [148, 362377.17000000004, 79, 244054.29000000004]}, {"label": "33 2024", "weekNum": 33, "year": 2024, "vals": [184, 1168895.9500000002, 999, 2933155.2800000017]}, {"label": "34 2024", "weekNum": 34, "year": 2024, "vals": [602, 1294192.83, 393, 1136406.5700000003]}, {"label": "34 2025", "weekNum": 34, "year": 2025, "vals": [20, 40421.420000000006, 100, 310247.87]}, {"label": "35 2024", "weekNum": 35, "year": 2024, "vals": [61, 229239.53999999998, 278, 517772.2799999999]}, {"label": "35 2025", "weekNum": 35, "year": 2025, "vals": [6, 17924.58, 97, 259284.72999999995]}, {"label": "36 2025", "weekNum": 36, "year": 2025, "vals": [-1051, -1171679.4400000004, -5, -23458.870000000006]}, {"label": "36 2024", "weekNum": 36, "year": 2024, "vals": [137, 302028.49000000005, 179, 474447.38]}, {"label": "37 2025", "weekNum": 37, "year": 2025, "vals": [663, 2108755.05, 14, 30335.18999999999]}, {"label": "37 2024", "weekNum": 37, "year": 2024, "vals": [3027, 5927894.630000005, 324, 682749.73]}, {"label": "38 2025", "weekNum": 38, "year": 2025, "vals": [207, 715083.0099999999, 53, 142752.2]}, {"label": "38 2024", "weekNum": 38, "year": 2024, "vals": [2107, 4278067.009999998, 1182, 2190007.8099999996]}, {"label": "39 2024", "weekNum": 39, "year": 2024, "vals": [1531, 3531284.859999997, 3682, 7566718.770000009]}, {"label": "39 2025", "weekNum": 39, "year": 2025, "vals": [0, -44319.34000000001, -498, 491176.3399999997]}, {"label": "40 2025", "weekNum": 40, "year": 2025, "vals": [-18, -4438.16, 219, 645170.4499999997]}, {"label": "40 2024", "weekNum": 40, "year": 2024, "vals": [460, 1674334.0800000003, 2110, 4983853.6599999955]}, {"label": "41 2025", "weekNum": 41, "year": 2025, "vals": [28, 87276.33, -2, -25011.93]}, {"label": "41 2024", "weekNum": 41, "year": 2024, "vals": [701, 1296295.08, 256, 839360.6099999996]}, {"label": "42 2025", "weekNum": 42, "year": 2025, "vals": [123, 360952.36000000004, 113, 441635.51000000007]}, {"label": "42 2024", "weekNum": 42, "year": 2024, "vals": [1373, 1027450.5600000042, 1977, 2090615.2599999988]}, {"label": "43 2025", "weekNum": 43, "year": 2025, "vals": [269, 1052946.7399999993, 138, 559014.42]}, {"label": "43 2024", "weekNum": 43, "year": 2024, "vals": [1354, 2370752.3399999994, 373, 648839.2599999999]}, {"label": "44 2024", "weekNum": 44, "year": 2024, "vals": [6, 129407.83000000002, 1105, 1952112.1799999992]}, {"label": "44 2025", "weekNum": 44, "year": 2025, "vals": [97, 310478.97000000003, 59, 357281.98]}, {"label": "45 2024", "weekNum": 45, "year": 2024, "vals": [785, 1569863.730000001, 136, 183453.84999999995]}, {"label": "45 2025", "weekNum": 45, "year": 2025, "vals": [711, 2140640.6799999997, 96, 385243.04000000004]}, {"label": "46 2024", "weekNum": 46, "year": 2024, "vals": [305, 539542.2499999999, 799, 1569003.8799999997]}, {"label": "46 2025", "weekNum": 46, "year": 2025, "vals": [572, 3584131.85, 169, 700921.6]}, {"label": "47 2025", "weekNum": 47, "year": 2025, "vals": [1355, 2642449.4900000007, 1645, 5352958.470000001]}, {"label": "47 2024", "weekNum": 47, "year": 2024, "vals": [862, 1802937.5100000005, 395, 1121684.1]}, {"label": "48 2024", "weekNum": 48, "year": 2024, "vals": [440, 816127.1600000001, 1057, 2350387.809999998]}, {"label": "48 2025", "weekNum": 48, "year": 2025, "vals": [441, 911424.0199999998, 701, 1588139.249999999]}, {"label": "49 2025", "weekNum": 49, "year": 2025, "vals": [546, 1815440.4299999997, 259, 1153051.3199999998]}, {"label": "49 2024", "weekNum": 49, "year": 2024, "vals": [408, 1644202.4899999998, 232, 561002.45]}, {"label": "50 2024", "weekNum": 50, "year": 2024, "vals": [683, 667492.7600000001, 1040, 2187036.7399999998]}, {"label": "50 2025", "weekNum": 50, "year": 2025, "vals": [977, 2258141.3399999985, 410, 1147372.0100000005]}, {"label": "51 2024", "weekNum": 51, "year": 2024, "vals": [1160, 2858087.6999999983, 385, 781220.1700000002]}, {"label": "51 2025", "weekNum": 51, "year": 2025, "vals": [3050, 7382434.7, 1242, 2329693.9100000006]}, {"label": "52 2024", "weekNum": 52, "year": 2024, "vals": [1536, 3302894.81, 2223, 4913577.839999999]}, {"label": "52 2025", "weekNum": 52, "year": 2025, "vals": [755, 2113749.3300000015, 2982, 8107115.890000001]}];
+const TOPTAN_AY_YIL_DATA = {"months": [{"year": 2024, "ayAdi": "2024 Ocak", "vals": [560, 1109589.8283320004, 111, 297847.02999999997]}, {"year": 2024, "ayAdi": "2024 Şubat", "vals": [1886, 5468205.839999994, 1614, 4172967.51]}, {"year": 2024, "ayAdi": "2024 Mart", "vals": [3976, 9456478.261584034, 4380, 10565988.61000004]}, {"year": 2024, "ayAdi": "2024 Nisan", "vals": [1068, 2599141.383069, 406, 1141742.5299999996]}, {"year": 2024, "ayAdi": "2024 Mayıs", "vals": [1995, 5001357.715769005, 1969, 4353715.529999999]}, {"year": 2024, "ayAdi": "2024 Haziran", "vals": [522, 752530.4900000001, 6, 56121.39]}, {"year": 2024, "ayAdi": "2024 Temmuz", "vals": [2359, 7748044.49, 2708, 8221835.200000003]}, {"year": 2024, "ayAdi": "2024 Ağustos", "vals": [2169, 5831630.480000003, 1933, 5104773.570000003]}, {"year": 2024, "ayAdi": "2024 Eylül", "vals": [7114, 15385747.25000002, 6206, 12680999.920000007]}, {"year": 2024, "ayAdi": "2024 Ekim", "vals": [3570, 5010599.030000013, 4327, 7504597.130000003]}, {"year": 2024, "ayAdi": "2024 Kasım", "vals": [2404, 4869639.249999991, 3008, 6325829.089999988]}, {"year": 2024, "ayAdi": "2024 Aralık", "vals": [3798, 8507965.73, 3937, 8587893.480000008]}, {"year": 2025, "ayAdi": "2025 Ocak", "vals": [2851, 6599446.020000004, 2793, 6276838.980000004]}, {"year": 2025, "ayAdi": "2025 Şubat", "vals": [2086, 5063033.730000003, 2403, 5792669.410000007]}, {"year": 2025, "ayAdi": "2025 Mart", "vals": [1819, 5603836.680000002, 1709, 5411325.730000001]}, {"year": 2025, "ayAdi": "2025 Nisan", "vals": [1478, 5468642.360000003, 1002, 3405606.1599999988]}, {"year": 2025, "ayAdi": "2025 Mayıs", "vals": [1770, 4707366.249999998, 2073, 6187292.330000006]}, {"year": 2025, "ayAdi": "2025 Haziran", "vals": [1140, 2702672.0500000003, 840, 2566249.419999998]}, {"year": 2025, "ayAdi": "2025 Temmuz", "vals": [1487, 1928586.9799999995, 2194, 3092496.66]}, {"year": 2025, "ayAdi": "2025 Ağustos", "vals": [287, 853142.3199999998, 360, 993684.0799999991]}, {"year": 2025, "ayAdi": "2025 Eylül", "vals": [-205, 1576019.1199999996, -534, 382524.6499999994]}, {"year": 2025, "ayAdi": "2025 Ekim", "vals": [523, 1839036.3999999983, 698, 2445717.5399999996]}, {"year": 2025, "ayAdi": "2025 Kasım", "vals": [3079, 9278646.040000007, 2538, 7817915.460000001]}, {"year": 2025, "ayAdi": "2025 Aralık", "vals": [5463, 13966696.539999995, 5450, 13940231.540000005]}, {"year": 2026, "ayAdi": "2026 Ocak", "vals": [3003, 8559303.300000003, 2952, 8701931.52999999]}, {"year": 2026, "ayAdi": "2026 Şubat", "vals": [3120, 9876416.25, 2872, 8754938.640000006]}, {"year": 2026, "ayAdi": "2026 Mart", "vals": [3280, 13129622.17, 3936, 15109013.440000007]}, {"year": 2026, "ayAdi": "2026 Nisan", "vals": [1892, 7418767.540000002, 1507, 5598126.060000003]}, {"year": 2026, "ayAdi": "2026 Mayıs", "vals": [3956, 11415701.339999987, 4318, 12569624.319999998]}, {"year": 2026, "ayAdi": "2026 Haziran", "vals": [3079, 9195743.779999997, 2376, 8158275.749999991]}, {"year": 2026, "ayAdi": "2026 Temmuz", "vals": [1445, 4715246.86, 1563, 2916972.48]}], "yearTotals": [{"year": 2024, "vals": [31421, 71740929.74875373, 30605, 69014310.98999979]}, {"year": 2025, "vals": [21778, 59587124.489999965, 21526, 58312551.95999995]}, {"year": 2026, "vals": [19775, 64310801.24, 19524, 61808882.21999999]}]};
+
+const METRIC_HEADS_TOPTAN = ['Sipariş Adedi','Sipariş Cirosu','Satış Adedi','Satış Cirosu'];
+const EMPTY4 = [null,null,null,null];
+
+// vals sırası: [siparisAdet, siparisCiro, satisAdet, satisCiro] - GM% yok, dolgu renklendirmesi yok
+function toptanMetricCells(vals){
+  return `
+    <td class="center">${fmtInt(vals[0])}</td>
+    <td>${fmtTL(vals[1])}</td>
+    <td class="center">${fmtInt(vals[2])}</td>
+    <td>${fmtTL(vals[3])}</td>
+  `;
+}
+function toptanMetricKpiCells(vals){
+  return `
+    <th class="center">${fmtInt(vals[0])}</th>
+    <th>${fmtTL(vals[1])}</th>
+    <th class="center">${fmtInt(vals[2])}</th>
+    <th>${fmtTL(vals[3])}</th>
+  `;
+}
+function combineToptanTotals(list){
+  list = list.filter(x=>x && x.vals);
+  if(list.length===0) return EMPTY4.slice();
+  const sumIdx = (i) => list.reduce((s,x)=> s + (x.vals[i]||0), 0);
+  return [sumIdx(0), sumIdx(1), sumIdx(2), sumIdx(3)];
+}
+
+let toptanActiveTab = 'hafta';
+let toptanActiveYear = 'all';
+
+const toptanYearSelect = document.getElementById('toptanYearSelect');
+function rebuildToptanYearSelect(){
+  toptanYearSelect.innerHTML = '';
+  ALL_YEARS.forEach(y=>{
+    const o = document.createElement('option'); o.value=y; o.textContent=(y==='all'?'Tümü':y);
+    if(y===toptanActiveYear) o.selected = true;
+    toptanYearSelect.appendChild(o);
+  });
+}
+rebuildToptanYearSelect();
+toptanYearSelect.addEventListener('change', ()=>{
+  const v = toptanYearSelect.value;
+  toptanActiveYear = (v==='all') ? 'all' : Number(v);
+  renderToptanOzet();
+});
+
+document.querySelectorAll('#page-toptan-ozet .tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    toptanActiveTab = t.dataset.tab;
+    document.querySelectorAll('#page-toptan-ozet .tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    renderToptanOzet();
+  });
+});
+
+function selectToptanTabByName(name){
+  const el = document.querySelector('#page-toptan-ozet .tab[data-tab="'+name+'"]');
+  if(el){
+    toptanActiveTab = name;
+    document.querySelectorAll('#page-toptan-ozet .tab').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    renderToptanOzet();
+  }
+}
+document.querySelector('#page-toptan-ozet .tab[data-tab="hafta"]').classList.add('active');
+PAGE_TAB_SELECTORS['toptan-ozet'] = selectToptanTabByName;
+
+function renderToptanHead(cols, leadCount){
+  document.getElementById('toptanTheadRow').innerHTML = cols.map((c,i)=>`<th class="${i<leadCount?'lead':''}">${c}</th>`).join('');
+}
+function renderToptanKpiRow(leadColspan, leadLabel, vals){
+  const row = document.getElementById('toptanKpiRow');
+  if(!vals){ row.innerHTML=''; row.style.display='none'; return; }
+  row.style.display='';
+  row.innerHTML = `<th class="kpilabel" colspan="${leadColspan}">${leadLabel}</th>${toptanMetricKpiCells(vals)}`;
+}
+
+function renderToptanOzet(){
+  if(toptanActiveTab==='hafta') renderToptanHafta();
+  else if(toptanActiveTab==='ay') renderToptanAy();
+  else renderToptanYil();
+}
+
+// ----- HAFTA: her hafta zaten tek satır (kanal/gün kırılımı yok, alt toplam gerekmiyor) -----
+function renderToptanHafta(){
+  renderToptanHead(['Hafta', ...METRIC_HEADS_TOPTAN], 1);
+  let weeks;
+  if(toptanActiveYear==='all'){
+    weeks = TOPTAN_HAFTA_DATA.slice();
+  } else {
+    weeks = TOPTAN_HAFTA_DATA.filter(w=>w.year===toptanActiveYear);
+  }
+  weeks.sort((a,b)=> (b.year-a.year) || (b.weekNum-a.weekNum));
+
+  const tbody = document.getElementById('toptanTbody');
+  let html = '';
+  weeks.forEach((w,i)=>{
+    const stripe = i%2===1 ? ' stripe' : '';
+    html += `<tr class="${stripe}"><td class="lead">${w.weekNum} ${w.year}</td>${toptanMetricCells(w.vals)}</tr>`;
+  });
+  tbody.innerHTML = html;
+
+  let kpiVals, kpiLabel;
+  if(toptanActiveYear==='all'){
+    kpiVals = combineToptanTotals(TOPTAN_AY_YIL_DATA.yearTotals);
+    kpiLabel = 'Tümü';
+  } else {
+    const yt = TOPTAN_AY_YIL_DATA.yearTotals.find(y=>y.year===toptanActiveYear);
+    kpiVals = yt ? yt.vals : EMPTY4.slice();
+    kpiLabel = toptanActiveYear + ' Toplamı';
+  }
+  renderToptanKpiRow(1, kpiLabel, kpiVals);
+}
+
+// ----- AY: her ay tek satır + Toplam yıl (Tümü'de her yılın sonunda) -----
+function renderToptanAy(){
+  renderToptanHead(['Yıl','Ay Adı', ...METRIC_HEADS_TOPTAN], 2);
+  const tbody = document.getElementById('toptanTbody');
+  let html = ''; let rowCounter = 0;
+
+  if(toptanActiveYear==='all'){
+    [2026,2025,2024].forEach(yr=>{
+      TOPTAN_AY_YIL_DATA.months.filter(m=>m.year===yr).forEach(m=>{
+        rowCounter++;
+        const stripe = rowCounter%2===0 ? ' stripe' : '';
+        html += `<tr class="${stripe}"><td class="lead">${m.year}</td><td class="lead">${m.ayAdi}</td>${toptanMetricCells(m.vals)}</tr>`;
+      });
+      const yt = TOPTAN_AY_YIL_DATA.yearTotals.find(y=>y.year===yr);
+      if(yt) html += `<tr class="yeartotal"><td class="lead" colspan="2">Toplam ${yr}</td>${toptanMetricCells(yt.vals)}</tr>`;
+    });
+    const genel = combineToptanTotals(TOPTAN_AY_YIL_DATA.yearTotals);
+    html += `<tr class="grandtotal"><td class="lead" colspan="2">Genel Toplam</td>${toptanMetricCells(genel)}</tr>`;
+    tbody.innerHTML = html;
+    renderToptanKpiRow(2, 'Tümü', genel);
+  } else {
+    TOPTAN_AY_YIL_DATA.months.filter(m=>m.year===toptanActiveYear).forEach(m=>{
+      rowCounter++;
+      const stripe = rowCounter%2===0 ? ' stripe' : '';
+      html += `<tr class="${stripe}"><td class="lead">${m.year}</td><td class="lead">${m.ayAdi}</td>${toptanMetricCells(m.vals)}</tr>`;
+    });
+    const yt = TOPTAN_AY_YIL_DATA.yearTotals.find(y=>y.year===toptanActiveYear);
+    if(yt) html += `<tr class="totalrow"><td class="lead" colspan="2">Toplam ${toptanActiveYear}</td>${toptanMetricCells(yt.vals)}</tr>`;
+    tbody.innerHTML = html;
+    renderToptanKpiRow(2, toptanActiveYear + ' Toplamı', yt ? yt.vals : EMPTY4.slice());
+  }
+}
+
+// ----- YIL: sadece yıl bazlı toplamlar -----
+function renderToptanYil(){
+  renderToptanHead(['Yıl', ...METRIC_HEADS_TOPTAN], 1);
+  const tbody = document.getElementById('toptanTbody');
+  let html = '';
+  if(toptanActiveYear==='all'){
+    TOPTAN_AY_YIL_DATA.yearTotals.forEach((y,i)=>{
+      const stripe = i%2===1 ? ' stripe' : '';
+      html += `<tr class="${stripe}"><td class="lead">${y.year}</td>${toptanMetricCells(y.vals)}</tr>`;
+    });
+    const genel = combineToptanTotals(TOPTAN_AY_YIL_DATA.yearTotals);
+    html += `<tr class="grandtotal"><td class="lead">Genel Toplam</td>${toptanMetricCells(genel)}</tr>`;
+  } else {
+    const yt = TOPTAN_AY_YIL_DATA.yearTotals.find(y=>y.year===toptanActiveYear);
+    html += `<tr><td class="lead">${toptanActiveYear}</td>${toptanMetricCells(yt ? yt.vals : EMPTY4.slice())}</tr>`;
+  }
+  tbody.innerHTML = html;
+  renderToptanKpiRow(1, '', null);
+}
+
+renderToptanOzet();
 </script>
 </body>
 </html>
